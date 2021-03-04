@@ -1,12 +1,13 @@
 use ExtUtils::MakeMaker;
 use PDL::Core::Dev;
 
-our (%ldloadlibs, $libs0);
+our (%ldloadlibs, $libs0, $inc);
 my $pkg = 'Trans';
 my $file = lc($pkg).".pd";
 my @pack = ([$file, $pkg, "PDL::LinearAlgebra::$pkg"]);
 my %hash = pdlpp_stdargs(@pack);
 $hash{LIBS}[0] .= $libs0;
+$hash{INC} .= " $inc";
 
 WriteMakefile(
 	%hash,

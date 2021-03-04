@@ -11,6 +11,7 @@ our $libs0 = (
   `pkg-config lapack blas --libs` ||
   '-L/usr/lib/atlas -llapack -lblas -latlas'
 ) . ' ' . ExtUtils::F77->runtime;
+our $inc = '-DF77_USCORE='. (ExtUtils::F77->trail_ ? '_' : '');
 
 WriteMakefile(
   NAME => 'PDL::LinearAlgebra',

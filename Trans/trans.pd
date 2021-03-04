@@ -13,6 +13,10 @@ pp_addhdr('
 pp_addhdr('
 #include <math.h>
 
+#define CONCAT_(A, B) A ## B
+#define CONCAT(A, B) CONCAT_(A, B)
+#define FORTRAN(name) CONCAT(name, F77_USCORE)
+
 #if defined(PDL_CORE_VERSION) && PDL_CORE_VERSION < 10
 typedef PDL_Long PDL_Indx;
 #endif
@@ -192,17 +196,17 @@ pp_def('geexp',
  ----------------------------------------------------------------------| 
 */
 
-	extern int dscal_(integer *, double *, double *, 
+	extern int FORTRAN(dscal)(integer *, double *, double *,
 		integer *);
-	extern int dgemm_(char *, char *, integer *, integer *, integer *, 
+	extern int FORTRAN(dgemm)(char *, char *, integer *, integer *, integer *, 
 				double *, double *, integer *, double *, 
 				integer *, double *, double *, integer *, 
 				ftnlen, ftnlen);
-	extern int dgesv_(integer *, integer *, double *, 
+	extern int FORTRAN(dgesv)(integer *, integer *, double *, 
 		integer *, integer *, double *, integer *, integer *);
-	extern int daxpy_(integer *, double *, double *, 
+	extern int FORTRAN(daxpy)(integer *, double *, double *, 
 		integer *, double *, integer *);
-	extern double dlange_(char *norm, integer *m, integer *n, double *a, integer 
+	extern double FORTRAN(dlange)(char *norm, integer *m, integer *n, double *a, integer 
 		*lda, double *work);
 
 	integer i__1, i__2, i__, j, k;
@@ -519,16 +523,16 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 	dcomplex *wsp, *h__;
 
 
-	extern int zgemm_(char *, char *, integer *, integer *, 
+	extern int FORTRAN(zgemm)(char *, char *, integer *, integer *, 
 		integer *, dcomplex *, dcomplex *, integer *, 
 		dcomplex *, integer *, dcomplex *, dcomplex *, 
 		integer *, ftnlen, ftnlen);
-	extern int zgesv_(integer *, integer *, dcomplex *, 
+	extern int FORTRAN(zgesv)(integer *, integer *, dcomplex *, 
 		integer *, integer *, dcomplex *, integer *, integer *);
-	extern int zaxpy_(integer *, dcomplex *, 
+	extern int FORTRAN(zaxpy)(integer *, dcomplex *, 
 		dcomplex *, integer *, dcomplex *, integer *), zdscal_(
 		integer *, double *, dcomplex *, integer *);
-	extern double zlange_(char *norm, integer *m, integer *n, dcomplex *a, 
+	extern double FORTRAN(zlange)(char *norm, integer *m, integer *n, dcomplex *a, 
 		integer *lda, double *work);
 
 
@@ -909,7 +913,7 @@ If uplo is true, A is lower triangular.
           double *b;
           double tt, dn;
           integer i, j, k, l, p, ind, ind1, ind2, tmp, c__1;
-          extern double zdotu_(double *ret, integer *n, double *dx, integer *incx, double *dy,
+          extern double FORTRAN(zdotu)(double *ret, integer *n, double *dx, integer *incx, double *dy,
 			integer *incy);
 	diag = (dcomplex *) malloc ($PRIV(__n_size) * sizeof(dcomplex));
 

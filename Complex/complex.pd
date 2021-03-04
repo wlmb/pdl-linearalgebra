@@ -26,6 +26,10 @@ pp_addhdr('
 pp_addhdr('
 #include <math.h>
 
+#define CONCAT_(A, B) A ## B
+#define CONCAT(A, B) CONCAT_(A, B)
+#define FORTRAN(name) CONCAT(name, F77_USCORE)
+
 #if defined(PDL_CORE_VERSION) && PDL_CORE_VERSION < 10
 typedef PDL_Long PDL_Indx;
 #endif
@@ -47,7 +51,7 @@ typedef logical (*L_fp)();
 #define max(a,b) ((a) >= (b) ? (a) : (b))
 #endif
 
-extern integer ilaenv_(integer *ispec, char *name__, char *opts, integer *n1,
+extern integer FORTRAN(ilaenv)(integer *ispec, char *name__, char *opts, integer *n1,
 integer *n2, integer *n3, integer *n4, ftnlen name_len, ftnlen
 opts_len);
 
@@ -160,7 +164,7 @@ pp_defc("gesvd",
 		char trau, travt;
              types(F) %{
 
-		extern int cgesvd_(char *jobu, char *jobvt, integer *m, integer *n, float *a,
+		extern int FORTRAN(cgesvd)(char *jobu, char *jobvt, integer *m, integer *n, float *a,
 		integer *lda, float *s, float *u, int *ldu,
 		float *vt, integer *ldvt, float *work, integer *lwork, float *rwork,
 		integer *info);
@@ -169,7 +173,7 @@ pp_defc("gesvd",
              %}
              types(D) %{
 
-		extern int zgesvd_(char *jobz,char *jobvt, integer *m, integer *n,
+		extern int FORTRAN(zgesvd)(char *jobz,char *jobvt, integer *m, integer *n,
 		double *a, integer *lda, double *s, double *u, int *ldu,
 		double *vt, integer *ldvt, double *work, integer *lwork, double *rwork,
 		integer *info);
@@ -279,7 +283,7 @@ pp_defc("gesdd",
 		char tra;
              types(F) %{
 
-		extern int cgesdd_(char *jobz, integer *m, integer *n, float *
+		extern int FORTRAN(cgesdd)(char *jobz, integer *m, integer *n, float *
 		a, integer *lda, float *s, float *u, int *ldu,
 		float *vt, integer *ldvt, float *work, integer *lwork,
 		float *rwork, integer *iwork, integer *info);
@@ -288,7 +292,7 @@ pp_defc("gesdd",
              %}
              types(D) %{
 
-		extern int zgesdd_(char *jobz, integer *m, integer *n, double *
+		extern int FORTRAN(zgesdd)(char *jobz, integer *m, integer *n, double *
 		a, integer *lda, double *s, double *u, int *ldu,
 		double *vt, integer *ldvt, double *work, integer *lwork,
 		double *rwork, integer *iwork, integer *info);
@@ -409,7 +413,7 @@ pp_defc("ggsvd",
 
              types(F) %{
 
-		extern int cggsvd3_(char *jobu, char *jobv, char *jobq, integer *m,
+		extern int FORTRAN(cggsvd3)(char *jobu, char *jobv, char *jobq, integer *m,
 		integer *n, integer *p, integer *k, integer *l, float *a, 
 		integer *lda, float *b, integer *ldb, float *alpha, 
 		float *beta, float *u, integer *ldu, float *v, integer 
@@ -419,7 +423,7 @@ pp_defc("ggsvd",
              %}
              types(D) %{
 
-		extern int zggsvd3_(char *jobu, char *jobv, char *jobq, integer *m,
+		extern int FORTRAN(zggsvd3)(char *jobu, char *jobv, char *jobq, integer *m,
 		integer *n, integer *p, integer *k, integer *l, double *a, 
 		integer *lda, double *b, integer *ldb, double *alpha, 
 		double *beta, double *u, integer *ldu, double *v, integer 
@@ -521,13 +525,13 @@ pp_defc("geev",
 		char jvl = \'N\';
 		char jvr = \'N\';
              types(F) %{
-		extern int cgeev_(char *jobvl, char *jobvr, integer *n, float *a,
+		extern int FORTRAN(cgeev)(char *jobvl, char *jobvr, integer *n, float *a,
 		integer *lda, float *w, float *vl, integer *ldvl, float *vr,
 		integer *ldvr, float *work, integer *lwork, float *rwork, integer *info);
 		float tmp_work[2], *rwork;
              %}
              types(D) %{
-		extern int zgeev_(char *jobvl, char *jobvr, integer *n, double *
+		extern int FORTRAN(zgeev)(char *jobvl, char *jobvr, integer *n, double *
 		a, integer *lda, double *w, double *vl,
 		integer *ldvl, double *vr, integer *ldvr, double *work,
 		integer *lwork, double *rwork, integer *info);
@@ -601,7 +605,7 @@ pp_defc("geevx",
 		char balanc, sens;
 		integer lwork = -1;
              types(F) %{
-		extern int cgeevx_(char *balanc, char *jobvl, char *jobvr, char *
+		extern int FORTRAN(cgeevx)(char *balanc, char *jobvl, char *jobvr, char *
 		sense, integer *n, float *a, integer *lda, float *w,
 		float *vl, integer *ldvl, float *vr,
 		integer *ldvr, integer *ilo, integer *ihi, float *scale,
@@ -610,7 +614,7 @@ pp_defc("geevx",
 		float tmp_work[2], *rwork;
              %}
              types(D) %{
-		extern int zgeevx_(char *balanc, char *jobvl, char *jobvr, char *
+		extern int FORTRAN(zgeevx)(char *balanc, char *jobvl, char *jobvr, char *
 		sense, integer *n, double *a, integer *lda, double *w,
 		double *vl, integer *ldvl, double *vr,
 		integer *ldvr, integer *ilo, integer *ihi, double *scale,
@@ -722,7 +726,7 @@ pp_defc("ggev",
 		char pjobvl = \'N\', pjobvr = \'N\';
 
              types(F) %{
-		extern int cggev_(char *jobvl, char *jobvr, integer *n, float *
+		extern int FORTRAN(cggev)(char *jobvl, char *jobvr, integer *n, float *
 		a, integer *lda, float *b, integer *ldb, float *alpha,
 		float *beta, float *vl, integer *ldvl,
 		float *vr, integer *ldvr, float *work, integer *lwork,
@@ -730,7 +734,7 @@ pp_defc("ggev",
 		float tmp_work[2], *rwork;
              %}
              types(D) %{
-		extern int zggev_(char *jobvl, char *jobvr, integer *n, double *
+		extern int FORTRAN(zggev)(char *jobvl, char *jobvr, integer *n, double *
 		a, integer *lda, double *b, integer *ldb, double *alpha,
 		double *beta, double *vl, integer *ldvl,
 		double *vr, integer *ldvr, double *work, integer *lwork,
@@ -823,7 +827,7 @@ pp_defc("ggevx",
 		rwork = (float *)malloc(6 * $SIZE(n) *  sizeof(float));
              %}
              types(D) %{
-		extern int zggevx_(char *balanc, char *jobvl, char *jobvr, char *
+		extern int FORTRAN(zggevx)(char *balanc, char *jobvl, char *jobvr, char *
 		sense, integer *n, double *a, integer *lda, double *b,
 		integer *ldb, double *alpha, double *
 		beta, double *vl, integer *ldvl, double *vr, integer *ldvr,
@@ -1060,7 +1064,7 @@ pp_defc("gees",
 		integer lwork = -1;
 
              types(F) %{
-		extern int cgees_(char *jobvs, char *sort, L_fp select, integer *n,
+		extern int FORTRAN(cgees)(char *jobvs, char *sort, L_fp select, integer *n,
 		float *a, integer *lda, integer *sdim, float *w,
 		float *vs, integer *ldvs, float *work,
 		integer *lwork, float *rwork, integer *bwork, integer *info);
@@ -1070,7 +1074,7 @@ pp_defc("gees",
 		fselect_func    = $PRIV(select_func);
              %}
              types(D) %{
-		extern int zgees_(char *jobvs, char *sort, L_fp select, integer *n,
+		extern int FORTRAN(zgees)(char *jobvs, char *sort, L_fp select, integer *n,
 		double *a, integer *lda, integer *sdim, double *w,
 		double *vs, integer *ldvs, double *work,
 		integer *lwork, double *rwork, integer *bwork, integer *info);
@@ -1207,7 +1211,7 @@ pp_defc("geesx",
 		char sens;
 
              types(F) %{
-		extern int cgeesx_(char *jobvs, char *sort, L_fp select, char * sense,
+		extern int FORTRAN(cgeesx)(char *jobvs, char *sort, L_fp select, char * sense,
 		integer *n, float *a, integer *lda, integer *sdim, float *w,
 		float *vs, integer *ldvs, float *rconde, float *rcondv,
 		float *work, integer *lwork, float *rwork,
@@ -1217,7 +1221,7 @@ pp_defc("geesx",
 		fselect_func    = $PRIV(select_func);
              %}
              types(D) %{
-		extern int zgeesx_(char *jobvs, char *sort, L_fp select, char * sense,
+		extern int FORTRAN(zgeesx)(char *jobvs, char *sort, L_fp select, char * sense,
 		integer *n, double *a, integer *lda, integer *sdim, double *w,
 		double *vs, integer *ldvs, double *rconde, double *rcondv,
 		double *work, integer *lwork, double *rwork,
@@ -1477,7 +1481,7 @@ pp_defc("gges",
 		integer *bwork;
 
              types(F) %{
-		extern int cgges_(char *jobvsl, char *jobvsr, char *sort, L_fp
+		extern int FORTRAN(cgges)(char *jobvsl, char *jobvsr, char *sort, L_fp
 		delctg, integer *n, float *a, integer *lda, float *b,
 		integer *ldb, integer *sdim, float *alpha,
 		float *beta, float *vsl, integer *ldvsl, float *vsr,
@@ -1488,7 +1492,7 @@ pp_defc("gges",
 		rwork = (float *)malloc(8 * $SIZE(n) *  sizeof(float));	
              %}
              types(D) %{
-		extern int zgges_(char *jobvsl, char *jobvsr, char *sort, L_fp
+		extern int FORTRAN(zgges)(char *jobvsl, char *jobvsr, char *sort, L_fp
 		delctg, integer *n, double *a, integer *lda, double *b,
 		integer *ldb, integer *sdim, double *alpha,
 		double *beta, double *vsl, integer *ldvsl, double *vsr,
@@ -1663,7 +1667,7 @@ pp_defc("ggesx",
 		integer *bwork;
 		integer *iwork;
              types(F) %{
-		extern int cggesx_(char *jobvsl, char *jobvsr, char *sort, L_fp
+		extern int FORTRAN(cggesx)(char *jobvsl, char *jobvsr, char *sort, L_fp
 		delctg, char *sense, integer *n, float *a, integer *lda, float *b,
 		integer *ldb, integer *sdim, float *alpha,
 		float *beta, float *vsl, integer *ldvsl, float *vsr,
@@ -1674,7 +1678,7 @@ pp_defc("ggesx",
 		fgselect_func    = $PRIV(select_func);
              %}
              types(D) %{
-		extern int zggesx_(char *jobvsl, char *jobvsr, char *sort, L_fp
+		extern int FORTRAN(zggesx)(char *jobvsl, char *jobvsr, char *sort, L_fp
 		delctg, char *sense, integer *n, double *a, integer *lda, double *b,
 		integer *ldb, integer *sdim, double *alpha,
 		double *beta, double *vsl, integer *ldvsl, double *vsr,
@@ -1839,7 +1843,7 @@ pp_defc("heev",
 		char puplo = \'U\';
 		integer lwork = -1;
              types(F) %{
-		extern int cheev_(char *jobz, char *uplo, integer *n, float *a,
+		extern int FORTRAN(cheev)(char *jobz, char *uplo, integer *n, float *a,
 	 	integer *lda, float *w, float *work, integer *lwork, float *rwork,
 		integer *info);
 		float *rwork;
@@ -1847,7 +1851,7 @@ pp_defc("heev",
 		rwork = (float *) malloc ((3*$PRIV(__n_size)-2) * sizeof(float));
              %}
              types(D) %{
-		extern int zheev_(char *jobz, char *uplo, integer *n, double *a,
+		extern int FORTRAN(zheev)(char *jobz, char *uplo, integer *n, double *a,
 	 	integer *lda, double *w, double *work, integer *lwork, double *rwork,
 		integer *info);
 		double *rwork;
@@ -1924,14 +1928,14 @@ pp_defc("heevd",
 		integer *iwork;
 
              types(F) %{
-		extern int cheevd_(char *jobz, char *uplo, integer *n, float *a,
+		extern int FORTRAN(cheevd)(char *jobz, char *uplo, integer *n, float *a,
 	 	integer *lda, float *w, float *work, integer *lwork, float *rwork, integer *lrwork,
 		integer *iwork, integer *liwork, integer *info);
 		float tmp_work[2];
 		float tmpr_work;
              %}
              types(D) %{
-		extern int zheevd_(char *jobz, char *uplo, integer *n, double *a,
+		extern int FORTRAN(zheevd)(char *jobz, char *uplo, integer *n, double *a,
 	 	integer *lda, double *w, double *work, integer *lwork, double *rwork, integer *lrwork,
 		integer *iwork, integer *liwork, integer *info);
 		double tmp_work[2];
@@ -2015,7 +2019,7 @@ pp_defc("heevx",
 		integer *iwork;
 
              types(F) %{
-		extern int cheevx_(char *jobz, char *range, char *uplo, integer *n,
+		extern int FORTRAN(cheevx)(char *jobz, char *range, char *uplo, integer *n,
 		float *a, integer *lda, float *vl, float *vu, integer *
 		il, integer *iu, float *abstol, integer *m, float *w,
 		float *z__, integer *ldz, float *work, integer *lwork,
@@ -2025,7 +2029,7 @@ pp_defc("heevx",
 		rwork = (float *)malloc(7 * $SIZE(n) * sizeof(float));
              %}
              types(D) %{
-		extern int zheevx_(char *jobz, char *range, char *uplo, integer *n,
+		extern int FORTRAN(zheevx)(char *jobz, char *range, char *uplo, integer *n,
 		double *a, integer *lda, double *vl, double *vu, integer *
 		il, integer *iu, double *abstol, integer *m, double *w,
 		double *z__, integer *ldz, double *work, integer *lwork,
@@ -2130,7 +2134,7 @@ pp_defc("heevr",
 		integer tmpi_work;
 
              types(F) %{
-		extern int cheevr_(char *jobz, char *range, char *uplo, integer *n,
+		extern int FORTRAN(cheevr)(char *jobz, char *range, char *uplo, integer *n,
 		float *a, integer *lda, float *vl, float *vu, integer *
 		il, integer *iu, float *abstol, integer *m, float *w,
 		float *z__, integer *ldz, integer *isuppz, float *work, integer *lwork, float *rwork, integer *lrwork,
@@ -2139,7 +2143,7 @@ pp_defc("heevr",
 		float tmpr_work;
              %}
              types(D) %{
-		extern int zheevr_(char *jobz, char *range, char *uplo, integer *n,
+		extern int FORTRAN(zheevr)(char *jobz, char *range, char *uplo, integer *n,
 		double *a, integer *lda, double *vl, double *vu, integer *
 		il, integer *iu, double *abstol, integer *m, double *w,
 		double *z__, integer *ldz, integer *isuppz, double *work, integer *lwork, double *rwork, integer *lrwork,
@@ -2250,14 +2254,14 @@ pp_defc("hegv",
 		integer lwork = -1;
 
              types(F) %{
-		extern int chegv_(integer *itype, char *jobz, char *uplo, integer *
+		extern int FORTRAN(chegv)(integer *itype, char *jobz, char *uplo, integer *
 		n, float *a, integer *lda, float *b, integer *ldb,
 		float *w, float *work, integer *lwork, float *rwork, integer *info);
 		float tmp_work[2], *rwork;
 		rwork = (float *) malloc( (3 * $SIZE(n) - 2 ) *  sizeof(float));
              %}
              types(D) %{
-		extern int zhegv_(integer *itype, char *jobz, char *uplo, integer *
+		extern int FORTRAN(zhegv)(integer *itype, char *jobz, char *uplo, integer *
 		n, double *a, integer *lda, double *b, integer *ldb,
 		double *w, double *work, integer *lwork, double *rwork, integer *info);
 		double tmp_work[2], *rwork;
@@ -2335,14 +2339,14 @@ pp_defc("hegvd",
 		integer tmp_iwork;
 
              types(F) %{
-		extern int chegvd_(integer *itype, char *jobz, char *uplo, integer *
+		extern int FORTRAN(chegvd)(integer *itype, char *jobz, char *uplo, integer *
 		n, float *a, integer *lda, float *b, integer *ldb,
 		float *w, float *work, integer *lwork, float *rwork, integer *lrwork,
 		integer *iwork,	integer *liwork, integer *info);
 		float tmp_work[2], tmp_rwork;
              %}
              types(D) %{
-		extern int zhegvd_(integer *itype, char *jobz, char *uplo, integer *
+		extern int FORTRAN(zhegvd)(integer *itype, char *jobz, char *uplo, integer *
 		n, double *a, integer *lda, double *b, integer *ldb,
 		double *w, double *work, integer *lwork, double *rwork, integer *lrwork,
 		integer *iwork, integer *liwork, integer *info);
@@ -2430,7 +2434,7 @@ pp_defc("hegvx",
 		integer *iwork;
 
              types(F) %{
-		extern int chegvx_(integer *itype, char *jobz, char *range, char *
+		extern int FORTRAN(chegvx)(integer *itype, char *jobz, char *range, char *
 		uplo, integer *n, float *a, integer *lda, float *b, integer
 		*ldb, float *vl, float *vu, integer *il, integer *iu,
 		float *abstol, integer *m, float *w, float *z__,
@@ -2440,7 +2444,7 @@ pp_defc("hegvx",
 		rwork = (float *)malloc(7 * $SIZE(n) *  sizeof(float));
              %}
              types(D) %{
-		extern int zhegvx_(integer *itype, char *jobz, char *range, char *
+		extern int FORTRAN(zhegvx)(integer *itype, char *jobz, char *range, char *
 		uplo, integer *n, double *a, integer *lda, double *b, integer
 		*ldb, double *vl, double *vu, integer *il, integer *iu,
 		double *abstol, integer *m, double *w, double *z__,
@@ -2548,11 +2552,11 @@ pp_defc("gesv",
 	Code => generate_code '
 
              types(F) %{
-		extern int cgesv_(integer *n, integer *nrhs, float *a, integer
+		extern int FORTRAN(cgesv)(integer *n, integer *nrhs, float *a, integer
 		*lda, integer *ipiv, float *b, integer *ldb, integer *info);
              %}
              types(D) %{
-		extern int zgesv_(integer *n, integer *nrhs, double *a, integer
+		extern int FORTRAN(zgesv)(integer *n, integer *nrhs, double *a, integer
 		*lda, integer *ipiv, double *b, integer *ldb, integer *info);
              %}
 
@@ -2575,7 +2579,7 @@ pp_defc("gesvx",
 		char ptrans, pfact, pequed;
 
              types(F) %{
-		extern int cgesvx_(char *fact, char *trans, integer *n, integer *
+		extern int FORTRAN(cgesvx)(char *fact, char *trans, integer *n, integer *
 		nrhs, float *a, integer *lda, float *af, integer *ldaf,
 		integer *ipiv, char *equed, float *r__, float *c__,
 		float *b, integer *ldb, float *x, integer *ldx, float *
@@ -2585,7 +2589,7 @@ pp_defc("gesvx",
 		float *rwork  = (float *) malloc(4 * $PRIV(__n_size) *  sizeof(float));
              %}
              types(D) %{
-		extern int zgesvx_(char *fact, char *trans, integer *n, integer *
+		extern int FORTRAN(zgesvx)(char *fact, char *trans, integer *n, integer *
 		nrhs, double *a, integer *lda, double *af, integer *ldaf,
 		integer *ipiv, char *equed, double *r__, double *c__,
 		double *b, integer *ldb, double *x, integer *ldx, double *
@@ -2690,13 +2694,13 @@ pp_defc("sysv",
 		char puplo = \'U\';
 		integer lwork = -1;
              types(F) %{
-		extern int csysv_(char *uplo, integer *n, integer *nrhs, float
+		extern int FORTRAN(csysv)(char *uplo, integer *n, integer *nrhs, float
 		*a, integer *lda, integer *ipiv, float *b, integer *ldb,
 		float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zsysv_(char *uplo, integer *n, integer *nrhs, double
+		extern int FORTRAN(zsysv)(char *uplo, integer *n, integer *nrhs, double
 		*a, integer *lda, integer *ipiv, double *b, integer *ldb,
 		double *work, integer *lwork, integer *info);
 		double tmp_work[2];
@@ -2763,7 +2767,7 @@ pp_defc("sysvx",
 		integer lwork = -1;
 
              types(F) %{
-		extern int csysvx_(char *fact, char *uplo, integer *n, integer *
+		extern int FORTRAN(csysvx)(char *fact, char *uplo, integer *n, integer *
 		nrhs, float *a, integer *lda, float *af, integer *ldaf,
 		integer *ipiv, float *b, integer *ldb, float *x, integer *
 		ldx, float *rcond, float *ferr, float *berr,
@@ -2772,7 +2776,7 @@ pp_defc("sysvx",
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zsysvx_(char *fact, char *uplo, integer *n, integer *
+		extern int FORTRAN(zsysvx)(char *fact, char *uplo, integer *n, integer *
 		nrhs, double *a, integer *lda, double *af, integer *ldaf,
 		integer *ipiv, double *b, integer *ldb, double *x, integer *
 		ldx, double *rcond, double *ferr, double *berr,
@@ -2861,13 +2865,13 @@ pp_defc("hesv",
 		char puplo = \'U\';
 		integer lwork = -1;
              types(F) %{
-		extern int chesv_(char *uplo, integer *n, integer *nrhs, float
+		extern int FORTRAN(chesv)(char *uplo, integer *n, integer *nrhs, float
 		*a, integer *lda, integer *ipiv, float *b, integer *ldb,
 		float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zhesv_(char *uplo, integer *n, integer *nrhs, double
+		extern int FORTRAN(zhesv)(char *uplo, integer *n, integer *nrhs, double
 		*a, integer *lda, integer *ipiv, double *b, integer *ldb,
 		double *work, integer *lwork, integer *info);
 		double tmp_work[2];
@@ -2941,7 +2945,7 @@ pp_defc("hesvx",
 		integer lwork = -1;
 
              types(F) %{
-		extern int chesvx_(char *fact, char *uplo, integer *n, integer *
+		extern int FORTRAN(chesvx)(char *fact, char *uplo, integer *n, integer *
 		nrhs, float *a, integer *lda, float *af, integer *ldaf,
 		integer *ipiv, float *b, integer *ldb, float *x, integer *
 		ldx, float *rcond, float *ferr, float *berr,
@@ -2950,7 +2954,7 @@ pp_defc("hesvx",
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zhesvx_(char *fact, char *uplo, integer *n, integer *
+		extern int FORTRAN(zhesvx)(char *fact, char *uplo, integer *n, integer *
 		nrhs, double *a, integer *lda, double *af, integer *ldaf,
 		integer *ipiv, double *b, integer *ldb, double *x, integer *
 		ldx, double *rcond, double *ferr, double *berr,
@@ -3047,11 +3051,11 @@ pp_defc("posv",
              char puplo = \'U\';
 
              types(F) %{
-		extern int cposv_(char *uplo, integer *n, integer *nrhs, float
+		extern int FORTRAN(cposv)(char *uplo, integer *n, integer *nrhs, float
 		*a, integer *lda, float *b, integer *ldb, integer *info);
              %}
              types(D) %{
-		extern int zposv_(char *uplo, integer *n, integer *nrhs, double
+		extern int FORTRAN(zposv)(char *uplo, integer *n, integer *nrhs, double
 		*a, integer *lda, double *b, integer *ldb, integer *info);
              %}
 
@@ -3092,7 +3096,7 @@ pp_defc("posvx",
 		char puplo = \'U\';
 
              types(F) %{
-		extern int cposvx_(char *fact, char *uplo, integer *n, integer *
+		extern int FORTRAN(cposvx)(char *fact, char *uplo, integer *n, integer *
 		nrhs, float *a, integer *lda, float *af, integer *ldaf,
 		char *equed, float *s, float *b, integer *ldb, float *
 		x, integer *ldx, float *rcond, float *ferr, float *
@@ -3100,7 +3104,7 @@ pp_defc("posvx",
 		float *work, *rwork;
              %}
              types(D) %{
-		extern int zposvx_(char *fact, char *uplo, integer *n, integer *
+		extern int FORTRAN(zposvx)(char *fact, char *uplo, integer *n, integer *
 		nrhs, double *a, integer *lda, double *af, integer *ldaf,
 		char *equed, double *s, double *b, integer *ldb, double *
 		x, integer *ldx, double *rcond, double *ferr, double *
@@ -3191,13 +3195,13 @@ pp_defc("gels",
 		integer lwork = -1;
 
              types(F) %{
-		extern int cgels_(char *trans, integer *m, integer *n, integer *
+		extern int FORTRAN(cgels)(char *trans, integer *m, integer *n, integer *
 		nrhs, float *a, integer *lda, float *b, integer *ldb,
 		float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgels_(char *trans, integer *m, integer *n, integer *
+		extern int FORTRAN(zgels)(char *trans, integer *m, integer *n, integer *
 		nrhs, double *a, integer *lda, double *b, integer *ldb,
 		double *work, integer *lwork, integer *info);
 		double tmp_work[2];
@@ -3274,7 +3278,7 @@ pp_defc("gelsy",
 		integer lwork = -1;
 
              types(F) %{
-		extern int cgelsy_(integer *m, integer *n, integer *nrhs,
+		extern int FORTRAN(cgelsy)(integer *m, integer *n, integer *nrhs,
 		float *a, integer *lda, float *b, integer *ldb, integer *
 		jpvt, float *rcond, integer *rank, float *work, integer *
 		lwork, float *rwork, integer *info);
@@ -3282,7 +3286,7 @@ pp_defc("gelsy",
 		float *rwork;
              %}
              types(D) %{
-		extern int zgelsy_(integer *m, integer *n, integer *nrhs,
+		extern int FORTRAN(zgelsy)(integer *m, integer *n, integer *nrhs,
 		double *a, integer *lda, double *b, integer *ldb, integer *
 		jpvt, double *rcond, integer *rank, double *work, integer *
 		lwork, double *rwork, integer *info);
@@ -3359,7 +3363,7 @@ pp_defc("gelss",
 		integer lrwork;
 
              types(F) %{
-		extern int cgelss_(integer *m, integer *n, integer *nrhs,
+		extern int FORTRAN(cgelss)(integer *m, integer *n, integer *nrhs,
 		float *a, integer *lda, float *b, integer *ldb, float *s,
 		float *rcond, integer *rank, float *work, integer *
 		lwork, float *rwork, integer *info);
@@ -3367,7 +3371,7 @@ pp_defc("gelss",
 		float *rwork;
              %}
              types(D) %{
-		extern int zgelss_(integer *m, integer *n, integer *nrhs,
+		extern int FORTRAN(zgelss)(integer *m, integer *n, integer *nrhs,
 		double *a, integer *lda, double *b, integer *ldb,
 		double *s,double *rcond, integer *rank, double *work, integer *
 		lwork, double *rwork, integer *info);
@@ -3447,7 +3451,7 @@ pp_defc("gelsd",
 
 
              types(F) %{
-		extern int cgelsd_(integer *m, integer *n, integer *nrhs,
+		extern int FORTRAN(cgelsd)(integer *m, integer *n, integer *nrhs,
 		float *a, integer *lda, float *b, integer *ldb, float *s,
 		float *rcond, integer *rank, float *work, integer *
 		lwork,  float *rwork, integer *iwork, integer *info);
@@ -3455,7 +3459,7 @@ pp_defc("gelsd",
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgelsd_(integer *m, integer *n, integer *nrhs,
+		extern int FORTRAN(zgelsd)(integer *m, integer *n, integer *nrhs,
 		double *a, integer *lda, double *b, integer *ldb,
 		double *s,double *rcond, integer *rank, double *work, integer *
 		lwork, double *rwork, integer *iwork,integer *info);
@@ -3553,14 +3557,14 @@ pp_defc("gglse",
 		integer lwork = -1;
 
              types(F) %{
-		extern int cgglse_(integer *m, integer *n, integer *p, float *
+		extern int FORTRAN(cgglse)(integer *m, integer *n, integer *p, float *
 		a, integer *lda, float *b, integer *ldb, float *c__,
 		float *d__, float *x, float *work, integer *lwork,
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgglse_(integer *m, integer *n, integer *p, double *
+		extern int FORTRAN(zgglse)(integer *m, integer *n, integer *p, double *
 		a, integer *lda, double *b, integer *ldb, double *c__,
 		double *d__, double *x, double *work, integer *lwork,
 		integer *info);
@@ -3619,14 +3623,14 @@ pp_defc("ggglm",
 		integer lwork = -1;
 
              types(F) %{
-		extern int cggglm_(integer *n, integer *m, integer *p, float *
+		extern int FORTRAN(cggglm)(integer *n, integer *m, integer *p, float *
 		a, integer *lda, float *b, integer *ldb, float *d__,
 		float *x, float *y, float *work, integer *lwork,
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zggglm_(integer *n, integer *m, integer *p, double *
+		extern int FORTRAN(zggglm)(integer *n, integer *m, integer *p, double *
 		a, integer *lda, double *b, integer *ldb, double *d__,
 		double *x, double *y, double *work, integer *lwork,
 		integer *info);
@@ -3691,12 +3695,12 @@ pp_defc("getrf",
 	Code => generate_code '
              types(F) %{
 
-		extern int cgetrf_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgetrf)(integer *m, integer *n, float *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
              types(D) %{
 
-		extern int zgetrf_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgetrf)(integer *m, integer *n, double *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
 		$TFD(cgetrf_,zgetrf_)(
@@ -3716,12 +3720,12 @@ pp_defc("getf2",
 	Code => generate_code '
              types(F) %{
 
-		extern int cgetf2_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgetf2)(integer *m, integer *n, float *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
              types(D) %{
 
-		extern int zgetf2_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgetf2)(integer *m, integer *n, double *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
 		$TFD(cgetf2_,zgetf2_)(
@@ -3749,14 +3753,14 @@ pp_defc("sytrf",
 	     integer lwork = -1;
 
 	     types(F) %{
-		extern int csytrf_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(csytrf)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, float *work, integer *lwork, integer *info);
 
 		float tmp_work[2];
              %}
 
              types(D) %{
-		extern int zsytrf_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zsytrf)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, double *work, integer *lwork, integer *info);
 
 		double tmp_work[2];
@@ -3810,12 +3814,12 @@ pp_defc("sytf2",
              char puplo = \'U\';
 
 	     types(F) %{
-		extern int csytf2_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(csytf2)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
 
              types(D) %{
-		extern int zsytf2_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zsytf2)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
 		if ($uplo())
@@ -3848,14 +3852,14 @@ pp_defc("chetrf",
 
 
 	     types(F) %{
-		extern int chetrf_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(chetrf)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, float *work, integer *lwork, integer *info);
 		float *work;
 		blocksiz = ilaenv_(&c_nine, "CHETRF", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
              %}
 
              types(D) %{
-		extern int zhetrf_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zhetrf)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, double *work, integer *lwork, integer *info);
 		double *work;
 		blocksiz = ilaenv_(&c_nine, "ZHETRF", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
@@ -3907,12 +3911,12 @@ pp_defc("hetf2",
              char puplo = \'U\';
 
 	     types(F) %{
-		extern int chetf2_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(chetf2)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
 
              types(D) %{
-		extern int zhetf2_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zhetf2)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
 		if ($uplo())
@@ -3944,12 +3948,12 @@ pp_defc("potrf",
 
 	     types(F) %{
 
-		extern int cpotrf_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(cpotrf)(char *uplo, integer *n, float *a, integer *
 		lda, integer *info);
              %}
              types(D) %{
 
-		extern int zpotrf_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zpotrf)(char *uplo, integer *n, double *a, integer *
 		lda, integer *info);
              %}
 		if ($uplo())
@@ -3986,12 +3990,12 @@ pp_defc("potf2",
 
 	     types(F) %{
 
-		extern int cpotf2_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(cpotf2)(char *uplo, integer *n, float *a, integer *
 		lda, integer *info);
              %}
              types(D) %{
 
-		extern int zpotf2_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zpotf2)(char *uplo, integer *n, double *a, integer *
 		lda, integer *info);
              %}
 		if ($uplo())
@@ -4027,14 +4031,14 @@ pp_defc("getri",
 		integer lwork = -1;
              types(F) %{
 
-		extern int cgetri_(integer *n, float *a, integer *lda, integer
+		extern int FORTRAN(cgetri)(integer *n, float *a, integer *lda, integer
 		*ipiv, float *work, integer *lwork, integer *info);
 
 		float tmp_work[2];
              %}
              types(D) %{
 
-		extern int zgetri_(integer *n, double *a, integer *lda, integer
+		extern int FORTRAN(zgetri)(integer *n, double *a, integer *lda, integer
 		*ipiv, double *work, integer *lwork, integer *info);
 
 		double tmp_work[2];
@@ -4082,14 +4086,14 @@ pp_defc("sytri",
              char puplo = \'U\';
              types(F) %{
 
-		extern int csytri_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(csytri)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, float *work, integer *info);
 
 		float *work = (float *)malloc(2*$PRIV(__n_size) *  sizeof(float));
              %}
              types(D) %{
 
-		extern int zsytri_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zsytri)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, double *work, integer *info);
 
 		double *work = (double *)malloc(2*$PRIV(__n_size) *  sizeof(double));
@@ -4116,14 +4120,14 @@ pp_defc("hetri",
              char puplo = \'U\';
              types(F) %{
 
-		extern int chetri_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(chetri)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, float *work, integer *info);
 
 		float *work = (float *)malloc(2*$PRIV(__n_size) *  sizeof(float));
              %}
              types(D) %{
 
-		extern int zhetri_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zhetri)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, double *work, integer *info);
 
 		double *work = (double *)malloc(2*$PRIV(__n_size) *  sizeof(double));
@@ -4157,11 +4161,11 @@ pp_defc("potri",
 		
              char puplo = \'U\';
 	     types(F) %{
-		extern int cpotri_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(cpotri)(char *uplo, integer *n, float *a, integer *
 		lda, integer *info);
              %}
              types(D) %{
-		extern int zpotri_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zpotri)(char *uplo, integer *n, double *a, integer *
 		lda, integer *info);
              %}
 		if ($uplo())
@@ -4184,12 +4188,12 @@ pp_defc("trtri",
              char pdiag = \'N\';
              types(F) %{
 
-		extern int ctrtri_(char *uplo, char *diag, integer *n, float *a, integer *
+		extern int FORTRAN(ctrtri)(char *uplo, char *diag, integer *n, float *a, integer *
 		lda, integer *info);
              %}
              types(D) %{
 
-		extern int ztrtri_(char *uplo, char *diag, integer *n, double *a, integer *
+		extern int FORTRAN(ztrtri)(char *uplo, char *diag, integer *n, double *a, integer *
 		lda, integer *info);
              %}
 		if ($uplo())
@@ -4215,12 +4219,12 @@ pp_defc("trti2",
              char pdiag = \'N\';
              types(F) %{
 
-		extern int ctrti2_(char *uplo, char *diag, integer *n, float *a, integer *
+		extern int FORTRAN(ctrti2)(char *uplo, char *diag, integer *n, float *a, integer *
 		lda, integer *info);
              %}
              types(D) %{
 
-		extern int ztrti2_(char *uplo, char *diag, integer *n, double *a, integer *
+		extern int FORTRAN(ztrti2)(char *uplo, char *diag, integer *n, double *a, integer *
 		lda, integer *info);
              %}
 		if ($uplo())
@@ -4244,12 +4248,12 @@ pp_defc("getrs",
 	Code => generate_code '
              char transp = \'N\';
 	     types(F) %{
-		extern int cgetrs_(char *trans, integer *n, integer *nrhs,
+		extern int FORTRAN(cgetrs)(char *trans, integer *n, integer *nrhs,
 		float *a, integer *lda, integer *ipiv, float *b, integer *
 		ldb, integer *info);
              %}
              types(D) %{
-		extern int zgetrs_(char *trans, integer *n, integer *nrhs,
+		extern int FORTRAN(zgetrs)(char *trans, integer *n, integer *nrhs,
 		double *a, integer *lda, integer *ipiv, double *b, integer *
 		ldb, integer *info);
              %}
@@ -4290,12 +4294,12 @@ pp_defc("sytrs",
 	Code => generate_code '
              char puplo = \'U\';
 	     types(F) %{
-		extern int csytrs_(char *uplo, integer *n, integer *nrhs,
+		extern int FORTRAN(csytrs)(char *uplo, integer *n, integer *nrhs,
 		float *a, integer *lda, integer *ipiv, float *b, integer *
 		ldb, integer *info);
              %}
              types(D) %{
-		extern int zsytrs_(char *uplo, integer *n, integer *nrhs,
+		extern int FORTRAN(zsytrs)(char *uplo, integer *n, integer *nrhs,
 		double *a, integer *lda, integer *ipiv, double *b, integer *
 		ldb, integer *info);
              %}
@@ -4322,12 +4326,12 @@ pp_defc("hetrs",
 	Code => generate_code '
              char puplo = \'U\';
 	     types(F) %{
-		extern int chetrs_(char *uplo, integer *n, integer *nrhs,
+		extern int FORTRAN(chetrs)(char *uplo, integer *n, integer *nrhs,
 		float *a, integer *lda, integer *ipiv, float *b, integer *
 		ldb, integer *info);
              %}
              types(D) %{
-		extern int zhetrs_(char *uplo, integer *n, integer *nrhs,
+		extern int FORTRAN(zhetrs)(char *uplo, integer *n, integer *nrhs,
 		double *a, integer *lda, integer *ipiv, double *b, integer *
 		ldb, integer *info);
              %}
@@ -4360,12 +4364,12 @@ pp_defc("potrs",
 	Code => generate_code '
              char puplo = \'U\';
 	     types(F) %{
-		extern int cpotrs_(char *uplo, integer *n, integer *nrhs,
+		extern int FORTRAN(cpotrs)(char *uplo, integer *n, integer *nrhs,
 		float *a, integer *lda, float *b, integer *ldb, integer *
 		info);
              %}
              types(D) %{
-		extern int zpotrs_(char *uplo, integer *n, integer *nrhs,
+		extern int FORTRAN(zpotrs)(char *uplo, integer *n, integer *nrhs,
 		double *a, integer *lda, double *b, integer *ldb, integer *
 		info);
              %}
@@ -4400,13 +4404,13 @@ pp_defc("trtrs",
              char ptrans = \'N\';
              char pdiag = \'N\';
 	     types(F) %{
-		extern int ctrtrs_(char *uplo, char *trans, char *diag, 
+		extern int FORTRAN(ctrtrs)(char *uplo, char *trans, char *diag, 
 		integer *n, integer *nrhs,
 		float *a, integer *lda, float *b, integer *
 		ldb, integer *info);
              %}
              types(D) %{
-		extern int ztrtrs_(char *uplo, char *trans, char *diag,
+		extern int FORTRAN(ztrtrs)(char *uplo, char *trans, char *diag,
 		integer *n, integer *nrhs,
 		double *a, integer *lda, double *b, integer *
 		ldb, integer *info);
@@ -4458,12 +4462,12 @@ pp_defc("latrs",
              char pnormin = \'N\';
 
 	     types(F) %{
-		extern int clatrs_(char *uplo, char *trans, char *diag, char *
+		extern int FORTRAN(clatrs)(char *uplo, char *trans, char *diag, char *
 		normin, integer *n, float *a, integer *lda, float *x, 
 		float *scale, float *cnorm, integer *info);
              %}
              types(D) %{
-		extern int zlatrs_(char *uplo, char *trans, char *diag, char *
+		extern int FORTRAN(zlatrs)(char *uplo, char *trans, char *diag, char *
 		normin, integer *n, double *a, integer *lda, double *x, 
 		double *scale, double *cnorm, integer *info);
              %}
@@ -4522,14 +4526,14 @@ pp_defc("gecon",
              char pnorm = \'I\';
 
 	     types(F) %{
-		extern int sgecon_(char *norm, integer *n, float *a, integer *
+		extern int FORTRAN(sgecon)(char *norm, integer *n, float *a, integer *
 		lda, float *anorm, float *rcond, float *work, float *
 		rwork, integer *info);
 		float *work = (float *) malloc(($PRIV(__n_size) * 4) *  sizeof(float));
 		float *rwork = (float *) malloc(($PRIV(__n_size) * 2)*  sizeof(integer));
              %}
              types(D) %{
-		extern int dgecon_(char *norm, integer *n, double *a, integer *
+		extern int FORTRAN(dgecon)(char *norm, integer *n, double *a, integer *
 		lda, double *anorm, double *rcond, double *work, double *
 		rwork, integer *info);
 		double *work = (double *) malloc(($PRIV(__n_size)*4) *  sizeof(double));
@@ -4570,13 +4574,13 @@ pp_defc("sycon",
              char puplo = \'U\';
 
 	     types(F) %{
-		extern int csycon_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(csycon)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, float *anorm, float *rcond, float *
 		work, integer *info);
 		float *work = (float *) malloc(($PRIV(__n_size) * 4) *  sizeof(float));
              %}
              types(D) %{
-		extern int zsycon_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zsycon)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, double *anorm, double *rcond, double *
 		work, integer *info);
 		double *work = (double *) malloc(($PRIV(__n_size)*4) *  sizeof(double));
@@ -4614,13 +4618,13 @@ pp_defc("hecon",
              char puplo = \'U\';
 
 	     types(F) %{
-		extern int checon_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(checon)(char *uplo, integer *n, float *a, integer *
 		lda, integer *ipiv, float *anorm, float *rcond, float *
 		work, integer *info);
 		float *work = (float *) malloc(($PRIV(__n_size) * 4) *  sizeof(float));
              %}
              types(D) %{
-		extern int zhecon_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zhecon)(char *uplo, integer *n, double *a, integer *
 		lda, integer *ipiv, double *anorm, double *rcond, double *
 		work, integer *info);
 		double *work = (double *) malloc(($PRIV(__n_size)*4) *  sizeof(double));
@@ -4659,14 +4663,14 @@ pp_defc("pocon",
              char puplo = \'U\';
 
 	     types(F) %{
-		extern int cpocon_(char *uplo, integer *n, float *a, integer *
+		extern int FORTRAN(cpocon)(char *uplo, integer *n, float *a, integer *
 		lda, float *anorm, float *rcond, float *work, float *
 		rwork, integer *info);
 		float *work = (float *) malloc(($PRIV(__n_size) * 4) *  sizeof(float));
 		float *rwork = (float *) malloc($PRIV(__n_size) *  sizeof(integer));
              %}
              types(D) %{
-		extern int zpocon_(char *uplo, integer *n, double *a, integer *
+		extern int FORTRAN(zpocon)(char *uplo, integer *n, double *a, integer *
 		lda, double *anorm, double *rcond, double *work, double *
 		rwork, integer *info);
 		double *work = (double *) malloc(($PRIV(__n_size)* 4) *  sizeof(double));
@@ -4708,13 +4712,13 @@ pp_defc("trcon",
              char pdiag = \'N\';
              char pnorm = \'I\';
 	     types(F) %{
-		extern int strcon_(char *norm, char *uplo, char *diag,integer *n, float *a, integer *
+		extern int FORTRAN(strcon)(char *norm, char *uplo, char *diag,integer *n, float *a, integer *
 		lda, float *rcond, float *work, float *rwork, integer *info);
 		float *work = (float *) malloc(($PRIV(__n_size) * 4) *  sizeof(float));
 		float *rwork = (float *) malloc($PRIV(__n_size) *  sizeof(integer));
              %}
              types(D) %{
-		extern int dtrcon_(char *norm, char *uplo, char *diag, integer *n, double *a, integer *
+		extern int FORTRAN(dtrcon)(char *norm, char *uplo, char *diag, integer *n, double *a, integer *
 		lda, double *rcond, double * work, double *rwork, integer *info);
 		double *work = (double *) malloc(($PRIV(__n_size)* 4) *  sizeof(double));
 		double *rwork = (double *) malloc($PRIV(__n_size) *  sizeof(integer));
@@ -4752,14 +4756,14 @@ pp_defc("geqp3",
 		integer lwork = -1;
 
 	     types(F) %{
-		extern int cgeqp3_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgeqp3)(integer *m, integer *n, float *a, integer *
 		lda, integer *jpvt, float *tau, float *work, integer *lwork,
 		float *rwork, integer *info);
 		float tmp_work[2], *rwork;
 		rwork = (float *) malloc ($PRIV(__n_size) * 2  * sizeof(float));
              %}
              types(D) %{
-		extern int zgeqp3_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgeqp3)(integer *m, integer *n, double *a, integer *
 		lda, integer *jpvt, double *tau, double *work, integer *lwork,
 		double *rwork, integer *info);
 		double tmp_work[2], *rwork;
@@ -4812,13 +4816,13 @@ pp_defc("geqrf",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cgeqrf_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgeqrf)(integer *m, integer *n, float *a, integer *
 		lda, float *tau, float *work, integer *lwork,
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgeqrf_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgeqrf)(integer *m, integer *n, double *a, integer *
 		lda, double *tau, double *work, integer *lwork,
 		 integer *info);
 		 double tmp_work[2];
@@ -4864,13 +4868,13 @@ pp_defc("ungqr",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cungqr_(integer *m, integer *n, integer *k, float *
+		extern int FORTRAN(cungqr)(integer *m, integer *n, integer *k, float *
 		a, integer *lda, float *tau, float *work, integer *lwork, 
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zungqr_(integer *m, integer *n, integer *k, double *
+		extern int FORTRAN(zungqr)(integer *m, integer *n, integer *k, double *
 		a, integer *lda, double *tau, double *work, integer *lwork, 
 		integer *info);
 		 double tmp_work[2];
@@ -4927,13 +4931,13 @@ pp_defc("unmqr",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cunmqr_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(cunmqr)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, float *a, integer *lda, float *tau, float *
 		c__, integer *ldc, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunmqr_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(zunmqr)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, double *a, integer *lda, double *tau, double *
 		c__, integer *ldc, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5000,12 +5004,12 @@ pp_defc("gelqf",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cgelqf_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgelqf)(integer *m, integer *n, float *a, integer *
 		lda, float *tau, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgelqf_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgelqf)(integer *m, integer *n, double *a, integer *
 		lda, double *tau, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
              %}
@@ -5050,13 +5054,13 @@ pp_defc("unglq",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cunglq_(integer *m, integer *n, integer *k, float *
+		extern int FORTRAN(cunglq)(integer *m, integer *n, integer *k, float *
 		a, integer *lda, float *tau, float *work, integer *lwork, 
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunglq_(integer *m, integer *n, integer *k, double *
+		extern int FORTRAN(zunglq)(integer *m, integer *n, integer *k, double *
 		a, integer *lda, double *tau, double *work, integer *lwork, 
 		integer *info);
 		 double tmp_work[2];
@@ -5112,13 +5116,13 @@ pp_defc("unmlq",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cunmlq_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(cunmlq)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, float *a, integer *lda, float *tau, float *
 		c__, integer *ldc, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunmlq_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(zunmlq)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, double *a, integer *lda, double *tau, double *
 		c__, integer *ldc, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5186,12 +5190,12 @@ pp_defc("geqlf",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cgeqlf_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgeqlf)(integer *m, integer *n, float *a, integer *
 		lda, float *tau, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgeqlf_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgeqlf)(integer *m, integer *n, double *a, integer *
 		lda, double *tau, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
              %}
@@ -5236,13 +5240,13 @@ pp_defc("ungql",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cungql_(integer *m, integer *n, integer *k, float *
+		extern int FORTRAN(cungql)(integer *m, integer *n, integer *k, float *
 		a, integer *lda, float *tau, float *work, integer *lwork, 
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zungql_(integer *m, integer *n, integer *k, double *
+		extern int FORTRAN(zungql)(integer *m, integer *n, integer *k, double *
 		a, integer *lda, double *tau, double *work, integer *lwork, 
 		integer *info);
 		 double tmp_work[2];
@@ -5298,13 +5302,13 @@ pp_defc("unmql",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cunmql_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(cunmql)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, float *a, integer *lda, float *tau, float *
 		c__, integer *ldc, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunmql_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(zunmql)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, double *a, integer *lda, double *tau, double *
 		c__, integer *ldc, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5371,12 +5375,12 @@ pp_defc("gerqf",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cgerqf_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(cgerqf)(integer *m, integer *n, float *a, integer *
 		lda, float *tau, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgerqf_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(zgerqf)(integer *m, integer *n, double *a, integer *
 		lda, double *tau, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
              %}
@@ -5421,13 +5425,13 @@ pp_defc("ungrq",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cungrq_(integer *m, integer *n, integer *k, float *
+		extern int FORTRAN(cungrq)(integer *m, integer *n, integer *k, float *
 		a, integer *lda, float *tau, float *work, integer *lwork, 
 		integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zungrq_(integer *m, integer *n, integer *k, double *
+		extern int FORTRAN(zungrq)(integer *m, integer *n, integer *k, double *
 		a, integer *lda, double *tau, double *work, integer *lwork, 
 		integer *info);
 		 double tmp_work[2];
@@ -5485,13 +5489,13 @@ pp_defc("unmrq",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cunmrq_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(cunmrq)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, float *a, integer *lda, float *tau, float *
 		c__, integer *ldc, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunmrq_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(zunmrq)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, double *a, integer *lda, double *tau, double *
 		c__, integer *ldc, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5560,12 +5564,12 @@ pp_defc("tzrzf",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int ctzrzf_(integer *m, integer *n, float *a, integer *
+		extern int FORTRAN(ctzrzf)(integer *m, integer *n, float *a, integer *
 		lda, float *tau, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int ztzrzf_(integer *m, integer *n, double *a, integer *
+		extern int FORTRAN(ztzrzf)(integer *m, integer *n, double *a, integer *
 		lda, double *tau, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
              %}
@@ -5612,13 +5616,13 @@ pp_defc("unmrz",
 		integer kk =  $SIZE(p) - $SIZE(k);
              
 	     types(F) %{
-		extern int cunmrz_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(cunmrz)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, integer *l, float *a, integer *lda, float *tau, float *
 		c__, integer *ldc, float *work, integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunmrz_(char *side, char *trans, integer *m, integer *n, 
+		extern int FORTRAN(zunmrz)(char *side, char *trans, integer *m, integer *n, 
 		integer *k, integer *l, double *a, integer *lda, double *tau, double *
 		c__, integer *ldc, double *work, integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5690,13 +5694,13 @@ pp_defc("gehrd",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cgehrd_(integer *n, integer *ilo, integer *ihi, 
+		extern int FORTRAN(cgehrd)(integer *n, integer *ilo, integer *ihi, 
 		float *a, integer *lda, float *tau, float *work, 
 		integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zgehrd_(integer *n, integer *ilo, integer *ihi, 
+		extern int FORTRAN(zgehrd)(integer *n, integer *ilo, integer *ihi, 
 		double *a, integer *lda, double *tau, double *work, 
 		integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5747,13 +5751,13 @@ pp_defc("unghr",
 		integer lwork = -1;
              
 	     types(F) %{
-		extern int cunghr_(integer *n, integer *ilo, integer *ihi, 
+		extern int FORTRAN(cunghr)(integer *n, integer *ilo, integer *ihi, 
 		float *a, integer *lda, float *tau, float *work, 
 		integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zunghr_(integer *n, integer *ilo, integer *ihi, 
+		extern int FORTRAN(zunghr)(integer *n, integer *ilo, integer *ihi, 
 		double *a, integer *lda, double *tau, double *work, 
 		integer *lwork, integer *info);
 		 double tmp_work[2];
@@ -5814,14 +5818,14 @@ pp_defc("hseqr",
 		integer lwork = -1;
 
 	     types(F) %{
-		extern int chseqr_(char *job, char *compz, integer *n, integer *ilo,
+		extern int FORTRAN(chseqr)(char *job, char *compz, integer *n, integer *ilo,
 	 	integer *ihi, float *h__, integer *ldh, float *w, 
 		float *z__, integer *ldz, float *work, 
 		integer *lwork, integer *info);
 		float tmp_work[2];
              %}
              types(D) %{
-		extern int zhseqr_(char *job, char *compz, integer *n, integer *ilo,
+		extern int FORTRAN(zhseqr)(char *job, char *compz, integer *n, integer *ilo,
 		integer *ihi, double *h__, integer *ldh, double *w, 
 		double *z__, integer *ldz, double *work, 
 		integer *lwork, integer *info);
@@ -5894,14 +5898,14 @@ pp_defc("trevc",
 		integer mm = 0;
 
 	     types(F) %{
-		extern int ctrevc_(char *side, char *howmny, logical *select, 
+		extern int FORTRAN(ctrevc)(char *side, char *howmny, logical *select, 
 		integer *n, float *t, integer *ldt, float *vl, integer *
 		ldvl, float *vr, integer *ldvr, integer *mm, integer *m, 
 		float *work, float *rwork, integer *info);
 		float *work = (float *) malloc(5 * $SIZE(n) *sizeof(float));
              %}
              types(D) %{
-		extern int ztrevc_(char *side, char *howmny, logical *select, 
+		extern int FORTRAN(ztrevc)(char *side, char *howmny, logical *select, 
 		integer *n, double *t, integer *ldt, double *vl, integer *
 		ldvl, double *vr, integer *ldvr, integer *mm, integer *m, 
 		double *work, double *rwork, integer *info);
@@ -5959,14 +5963,14 @@ pp_defc("tgevc",
 		integer mm = 0;
 
 	     types(F) %{
-		extern int ctgevc_(char *side, char *howmny, logical *select, 
+		extern int FORTRAN(ctgevc)(char *side, char *howmny, logical *select, 
 		integer *n, float *a, integer *lda, float *b, integer *ldb,
 		float *vl, integer *ldvl, float *vr, integer *ldvr, 
 		integer *mm, integer *m, float *work, float *rwork, integer *info);
 		float *work = (float *) malloc(6 * $SIZE(n) *sizeof(float));
              %}
              types(D) %{
-		extern int ztgevc_(char *side, char *howmny, logical *select, 
+		extern int FORTRAN(ztgevc)(char *side, char *howmny, logical *select, 
 		integer *n, double *a, integer *lda, double *b, integer *ldb,
 		double *vl, integer *ldvl, double *vr, integer *ldvr, 
 		integer *mm, integer *m, double *work, double *rwork, integer *info);
@@ -6027,11 +6031,11 @@ pp_defc("gebal",
 		char pjob;
              
 	     types(F) %{
-		extern int cgebal_(char *job, integer *n, float *a, integer *
+		extern int FORTRAN(cgebal)(char *job, integer *n, float *a, integer *
 		lda, integer *ilo, integer *ihi, float *scale, integer *info);
              %}
              types(D) %{
-		extern int zgebal_(char *job, integer *n, double *a, integer *
+		extern int FORTRAN(zgebal)(char *job, integer *n, double *a, integer *
 		lda, integer *ilo, integer *ihi, double *scale, integer *info);
              %}
 
@@ -6068,12 +6072,12 @@ pp_defc("lange",
              char pnorm;
 
 	     types(F) %{
-		extern float clange_(char *norm, integer *m, integer *n, float *a, integer
+		extern float FORTRAN(clange)(char *norm, integer *m, integer *n, float *a, integer
 		*lda, float *work);
 		float *work;
              %}
              types(D) %{
-		extern double zlange_(char *norm, integer *m, integer *n, double *a, integer
+		extern double FORTRAN(zlange)(char *norm, integer *m, integer *n, double *a, integer
 		*lda, double *work);
 		double *work;
              %}
@@ -6116,12 +6120,12 @@ pp_defc("lansy",
              char pnorm, puplo = \'U\';
 
 	     types(F) %{
-		extern float clansy_(char *norm, char *uplo, integer *n, float *a, integer 
+		extern float FORTRAN(clansy)(char *norm, char *uplo, integer *n, float *a, integer 
 		*lda, float *work);
 		float *work;
              %}
              types(D) %{
-		extern double zlansy_(char *norm, char *uplo, integer *n, double *a, integer 
+		extern double FORTRAN(zlansy)(char *norm, char *uplo, integer *n, double *a, integer 
 		*lda, double *work);
 		double *work;
              %}
@@ -6172,12 +6176,12 @@ pp_defc("lantr",
              char pdiag = \'N\';
 
 	     types(F) %{
-		extern float clantr_(char *norm, char *uplo, char *diag, integer *m, integer *n, float *a, integer 
+		extern float FORTRAN(clantr)(char *norm, char *uplo, char *diag, integer *m, integer *n, float *a, integer 
 		*lda, float *work);
 		float *work;
              %}
              types(D) %{
-		extern double zlantr_(char *norm, char *uplo, char *diag, integer *m, integer *n, double *a, integer 
+		extern double FORTRAN(zlantr)(char *norm, char *uplo, char *diag, integer *m, integer *n, double *a, integer 
 		*lda, double *work);
 		double *work;
              %}
@@ -6231,13 +6235,13 @@ pp_defc("gemm",
 		char ptransb = \'N\';
 
 		types(F) %{
-			extern int cgemm_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(cgemm)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, float *alpha, float *a, integer *lda,
 			float *b, integer *ldb, float *beta, float *c__,
 			integer *ldc);
 		%}
 		types(D) %{
-			extern int zgemm_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(zgemm)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, double *alpha, double *a, integer *lda,
 			double *b, integer *ldb, double *beta, double *c__,
 			integer *ldc);
@@ -6294,14 +6298,14 @@ pp_def("rmcgemm",
 	Code => '
 		int ptransa, ptransb;
 		types(F) %{
-			extern void cblas_cgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
+			extern void FORTRAN(cblas)cgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
 				const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
 				const int K, const void *alpha, const void *A,
 				const int lda, const void *B, const int ldb,
 				const void *beta, void *C, const int ldc);
 		%}
 		types(D) %{
-			extern void cblas_zgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
+			extern void FORTRAN(cblas)zgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
 		                 const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
 	        	         const int K, const void *alpha, const void *A,
 	                	 const int lda, const void *B, const int ldb,
@@ -6366,7 +6370,7 @@ pp_defc("mmult",
 	Code =>  '
 		char ptrans = \'N\';
 		types(F) %{
-			extern int cgemm_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(cgemm)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, float *alpha, float *a, integer *lda,
 			float *b, integer *ldb, float *beta, float *c__,
 			integer *ldc);
@@ -6374,7 +6378,7 @@ pp_defc("mmult",
 			float beta[2] = {0,0};
 		%}
 		types(D) %{
-			extern int zgemm_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(zgemm)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, double *alpha, double *a, integer *lda,
 			double *b, integer *ldb, double *beta, double *c__,
 			integer *ldc);
@@ -6405,7 +6409,7 @@ pp_defc("smmult",
 	Code =>  '
 		char ptrans = \'N\';
 		types(F) %{
-			extern int cgemmb_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(cgemmb)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, float *alpha, float *a, integer *lda,
 			float *b, integer *ldb, float *beta, float *c__,
 			integer *ldc);
@@ -6413,7 +6417,7 @@ pp_defc("smmult",
 			float beta[2] = {0,0};
 		%}
 		types(D) %{
-			extern int zgemmb_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(zgemmb)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, double *alpha, double *a, integer *lda,
 			double *b, integer *ldb, double *beta, double *c__,
 			integer *ldc);
@@ -6446,7 +6450,7 @@ pp_defc("crossprod",
 		char btrans = \'N\';
 		char atrans = \'C\';
 		types(F) %{
-			extern int cgemm_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(cgemm)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, float *alpha, float *a, integer *lda,
 			float *b, integer *ldb, float *beta, float *c__,
 			integer *ldc);
@@ -6454,7 +6458,7 @@ pp_defc("crossprod",
 			float beta[2] = {0,0};
 		%}
 		types(D) %{
-			extern int zgemm_(char *transa, char *transb, integer *m, integer *
+			extern int FORTRAN(zgemm)(char *transa, char *transb, integer *m, integer *
 			n, integer *k, double *alpha, double *a, integer *lda,
 			double *b, integer *ldb, double *beta, double *c__,
 			integer *ldc);
@@ -6489,12 +6493,12 @@ pp_defc("syrk",
 		char ptrans = \'N\';
 
 		types(F) %{
-			extern int csyrk_(char *uplo, char *trans, integer *n, integer *k,
+			extern int FORTRAN(csyrk)(char *uplo, char *trans, integer *n, integer *k,
 			float *alpha, float *a, integer *lda, float *beta,
 			float *c__, integer *ldc);
 		%}
 		types(D) %{
-			extern int zsyrk_(char *uplo, char *trans, integer *n, integer *k,
+			extern int FORTRAN(zsyrk)(char *uplo, char *trans, integer *n, integer *k,
 			double *alpha, double *a, integer *lda, double *beta,
 			double *c__, integer *ldc);
 		%}
@@ -6530,13 +6534,13 @@ pp_def("rmcsyrk",
 		int ptrans;
 
 		types(F) %{
-			extern void cblas_csyrk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
+			extern void FORTRAN(cblas)csyrk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 		                 const enum CBLAS_TRANSPOSE Trans, const int N, const int K,
 		                 const void *alpha, const void *A, const int lda,
 		                 const void *beta, void *C, const int ldc);
 		%}
 		types(D) %{
-			extern void cblas_zsyrk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
+			extern void FORTRAN(cblas)zsyrk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 		                 const enum CBLAS_TRANSPOSE Trans, const int N, const int K,
 	        	         const void *alpha, const void *A, const int lda,
 	                	 const void *beta, void *C, const int ldc);
@@ -6582,11 +6586,11 @@ pp_defc("dot",
 	GenericTypes => [F,D],
 	Code =>  '
 		types(F) %{
-			extern float cdotu_(float *ret, integer *n, float *dx, integer *incx, float *dy,
+			extern float FORTRAN(cdotu)(float *ret, integer *n, float *dx, integer *incx, float *dy,
 			integer *incy);
 		%}
 		types(D) %{
-			extern double zdotu_(double *ret, integer *n, double *dx, integer *incx, double *dy,
+			extern double FORTRAN(zdotu)(double *ret, integer *n, double *dx, integer *incx, double *dy,
 			integer *incy);
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
@@ -6606,11 +6610,11 @@ pp_def("cdotc",
 	GenericTypes => [F,D],
 	Code =>  '
 		types(F) %{
-			extern float cdotc_(float *ret, integer *n, float *dx, integer *incx, float *dy,
+			extern float FORTRAN(cdotc)(float *ret, integer *n, float *dx, integer *incx, float *dy,
 			integer *incy);
 		%}
 		types(D) %{
-			extern double zdotc_(double *ret, integer *n, double *dx, integer *incx, double *dy,
+			extern double FORTRAN(zdotc)(double *ret, integer *n, double *dx, integer *incx, double *dy,
 			integer *incy);
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
@@ -6639,11 +6643,11 @@ pp_defc("axpy",
 	Code =>  '
 
 		types(F) %{
-			extern int caxpy_(integer *n, float *da, float *dx,
+			extern int FORTRAN(caxpy)(integer *n, float *da, float *dx,
 			integer *incx, float *dy, integer *incy);
 		%}
 		types(D) %{
-			extern int zaxpy_(integer *n, double *da, double *dx,
+			extern int FORTRAN(zaxpy)(integer *n, double *da, double *dx,
 			integer *incx, double *dy, integer *incy);
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
@@ -6664,11 +6668,11 @@ pp_defc("nrm2",
 	Code =>  '
 
 		types(F) %{
-			extern float scnrm2_(integer *n, float *dx,
+			extern float FORTRAN(scnrm2)(integer *n, float *dx,
 			integer *incx);
 		%}
 		types(D) %{
-			extern double dznrm2_(integer *n, double *dx,
+			extern double FORTRAN(dznrm2)(integer *n, double *dx,
 			integer *incx);
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
@@ -6686,11 +6690,11 @@ pp_defc("asum",
 	Code =>  '
 
 		types(F) %{
-			extern float scasum_(integer *n, float *dx,
+			extern float FORTRAN(scasum)(integer *n, float *dx,
 			integer *incx);
 		%}
 		types(D) %{
-			extern double dzasum_(integer *n, double *dx,
+			extern double FORTRAN(dzasum)(integer *n, double *dx,
 			integer *incx);
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
@@ -6708,11 +6712,11 @@ pp_defc("scal",
 	Code =>  '
 
 		types(F) %{
-			extern int cscal_(integer *n, float *sa,
+			extern int FORTRAN(cscal)(integer *n, float *sa,
 			float *dx, integer *incx);
 		%}
 		types(D) %{
-			extern int zscal_(integer *n, double *sa,
+			extern int FORTRAN(zscal)(integer *n, double *sa,
 			double *dx,integer *incx);
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
@@ -6730,7 +6734,7 @@ pp_def("sscal",
 	GenericTypes => [F],
 	Code =>  '
 
-		extern int csscal_(integer *n, float *sa,
+		extern int FORTRAN(csscal)(integer *n, float *sa,
 		float *dx, integer *incx);
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 
@@ -6752,11 +6756,11 @@ pp_defc("rotg",
 	Code =>  '
 
 		types(F) %{
-			extern int crotg_(float *dx,
+			extern int FORTRAN(crotg)(float *dx,
 			float *dy, float *c, float *s);
 		%}
 		types(D) %{
-			extern int zrotg_(double *dx,
+			extern int FORTRAN(zrotg)(double *dx,
 			double *dy, double *c, double *s);
 		%}
 
@@ -6781,11 +6785,11 @@ pp_defc("lacpy",
 		char puplo;
 
 		types(F) %{
-			extern int clacpy_(char *uplo, integer *m, integer *n, float *
+			extern int FORTRAN(clacpy)(char *uplo, integer *m, integer *n, float *
 			a, integer *lda, float *b, integer *ldb);
 		%}
 		types(D) %{
-			extern int zlacpy_(char *uplo, integer *m, integer *n, double *
+			extern int FORTRAN(zlacpy)(char *uplo, integer *m, integer *n, double *
 			a, integer *lda, double *b, integer *ldb);
 		%}
 
@@ -6815,11 +6819,11 @@ pp_defc("laswp",
 	GenericTypes => [F,D],
 	Code => '
 		types(F) %{
-			extern int claswp_(integer *n, float *a, integer *lda, integer 
+			extern int FORTRAN(claswp)(integer *n, float *a, integer *lda, integer 
 			*k1, integer *k2, integer *ipiv, integer *incx);
 		%}
 		types(D) %{
-			extern int zlaswp_(integer *n, double *a, integer *lda, integer 
+			extern int FORTRAN(zlaswp)(integer *n, double *a, integer *lda, integer 
 			*k1, integer *k2, integer *ipiv, integer *incx);
 		%}
 
@@ -6980,7 +6984,7 @@ pp_defc(
 	//$GENERIC() *tmp;	
 	char ptrans = \'N\';	
 	types(F) %{
-		extern int cgemm_(char *transa, char *transb, integer *m, integer *
+		extern int FORTRAN(cgemm)(char *transa, char *transb, integer *m, integer *
 		n, integer *k, float *alpha, float *a, integer *lda,
 		float *b, integer *ldb, float *beta, float *c__,
 		integer *ldc);
@@ -6988,7 +6992,7 @@ pp_defc(
 		float beta[2] = {0,0};
 	%}
 	types(D) %{
-		extern int zgemm_(char *transa, char *transb, integer *m, integer *
+		extern int FORTRAN(zgemm)(char *transa, char *transb, integer *m, integer *
 		n, integer *k, double *alpha, double *a, integer *lda,
 		double *b, integer *ldb, double *beta, double *c__,
 		integer *ldc);

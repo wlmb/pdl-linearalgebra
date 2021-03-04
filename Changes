@@ -1,3 +1,6 @@
+- use C macro "FORTRAN()" to hide whether need _ on end of symbols
+- use ExtUtils::F77 to detect that plus Fortran runtime libs
+
 0.14 2019-12-09
 - updated build-file perms - thanks @manwar
 - support Lapack >= 3.7.0 - thanks Grégory Vanuxem
