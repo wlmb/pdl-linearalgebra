@@ -24,7 +24,7 @@ jobs:
       - name: Ubuntu packages
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get -y update && sudo apt-get -y install build-essential gfortran liblapack-dev
-      - run: cpanm -n PDL # configure dep
+      - run: cpanm -n PDL ExtUtils::F77 # configure dep
       - run: cpanm -n --installdeps .
       - name: Run tests (no coverage)
         if: ${{ !matrix.coverage }}

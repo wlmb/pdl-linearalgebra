@@ -1,5 +1,6 @@
 use ExtUtils::MakeMaker;
 use Config;
+use ExtUtils::F77;
 
 our %ldloadlibs = ($^O =~ /MSWin/ && $Config{cc} eq 'cl')
   ? (LDLOADLIBS => 'oldnames.lib kernel32.lib user32.lib gdi32.lib winspool.lib  comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib  netapi32.lib uuid.lib wsock32.lib mpr.lib winmm.lib  version.lib odbc32.lib odbccp32.lib msvcrt.lib  ../lapack/libacml.lib "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\lib\msvcrt.lib" ')
@@ -9,7 +10,7 @@ our $libs0 = (
   eval {require ExtUtils::PkgConfig; ExtUtils::PkgConfig->libs('lapack')} ||
   `pkg-config lapack blas --libs` ||
   '-L/usr/lib/atlas -llapack -lblas -latlas'
-) . " -lgfortran -lquadmath";
+) . ' ' . ExtUtils::F77->runtime;
 
 WriteMakefile(
   NAME => 'PDL::LinearAlgebra',
@@ -31,6 +32,7 @@ WriteMakefile(
     x_IRC => 'irc://irc.perl.org/#pdl',
   },
   CONFIGURE_REQUIRES =>  {
+    "ExtUtils::F77" => '1.26',
     "PDL" => 0,
   },
   PREREQ_PM => { "PDL" => 0 },
