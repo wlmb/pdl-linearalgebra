@@ -188,7 +188,7 @@ pp_def("gesvd",
 
 
 
-		$TFD(sgesvd_,dgesvd_)(
+		$TFD(FORTRAN(sgesvd),FORTRAN(dgesvd))(
 		&trau,
 		&travt,
 		&(integer){$PRIV(__m_size)},
@@ -214,7 +214,7 @@ pp_def("gesvd",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgesvd_,dgesvd_)(
+		$TFD(FORTRAN(sgesvd),FORTRAN(dgesvd))(
 		&trau,
 		&travt,
 		&(integer){$PRIV(__m_size)},
@@ -363,7 +363,7 @@ pp_def("gesdd",
 
 		}
 
-		$TFD(sgesdd_,dgesdd_)(
+		$TFD(FORTRAN(sgesdd),FORTRAN(dgesdd))(
 		&tra,
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
@@ -384,7 +384,7 @@ pp_def("gesdd",
 		types(F) %{
 			float *work;
 			if (tra == \'N\'){
-				smlsiz = ilaenv_(&c_nine, "SGESDD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
+				smlsiz = FORTRAN(ilaenv)(&c_nine, "SGESDD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
 				lwork = max(14*min($PRIV(__m_size),$PRIV(__n_size))+4, 10*min($PRIV(__m_size),
 					$PRIV(__n_size))+2+ smlsiz*(smlsiz+8)) + max($PRIV(__m_size),$PRIV(__n_size));
 			}
@@ -393,13 +393,13 @@ pp_def("gesdd",
              types(D) %{
 			double *work;
 			if (tra == \'N\'){
-				smlsiz = ilaenv_(&c_nine, "DGESDD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
+				smlsiz = FORTRAN(ilaenv)(&c_nine, "DGESDD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
 				lwork = max(14*min($PRIV(__m_size),$PRIV(__n_size))+4, 10*min($PRIV(__m_size),
 					$PRIV(__n_size))+2+ smlsiz*(smlsiz+8)) + max($PRIV(__m_size),$PRIV(__n_size));
 			}
 			work = (double *) malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgesdd_,dgesdd_)(
+		$TFD(FORTRAN(sgesdd),FORTRAN(dgesdd))(
 		&tra,
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
@@ -530,7 +530,7 @@ pp_def("ggsvd",
 		if ($jobq())
 			pjobq = \'Q\';
 
-		$TFD(sggsvd3_,dggsvd3_)(
+		$TFD(FORTRAN(sggsvd3),FORTRAN(dggsvd3))(
 		&pjobu,
 		&pjobv,
 		&pjobq,
@@ -565,7 +565,7 @@ pp_def("ggsvd",
 			work = (double *)malloc(lwork *  sizeof(double));
 		%}
 
-		$TFD(sggsvd3_,dggsvd3_)(
+		$TFD(FORTRAN(sggsvd3),FORTRAN(dggsvd3))(
 		&pjobu,
 		&pjobv,
 		&pjobq,
@@ -792,7 +792,7 @@ pp_def("geev",
 		if ($jobvr())
 			jvr = \'V\';
 
-		$TFD(sgeev_,dgeev_)(
+		$TFD(FORTRAN(sgeev),FORTRAN(dgeev))(
 		&jvl,
 		&jvr,
 		&(integer){$PRIV(__n_size)},
@@ -818,7 +818,7 @@ pp_def("geev",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgeev_,dgeev_)(
+		$TFD(FORTRAN(sgeev),FORTRAN(dgeev))(
 		&jvl,
 		&jvr,
 		&(integer){$PRIV(__n_size)},
@@ -978,7 +978,7 @@ pp_def("geevx",
 			default: sens = \'N\';
 		}
 
-		$TFD(sgeevx_,dgeevx_)(
+		$TFD(FORTRAN(sgeevx),FORTRAN(dgeevx))(
 		&balanc,
 		&jvl,
 		&jvr,
@@ -1013,7 +1013,7 @@ pp_def("geevx",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgeevx_,dgeevx_)(
+		$TFD(FORTRAN(sgeevx),FORTRAN(dgeevx))(
 		&balanc,
 		&jvl,
 		&jvr,
@@ -1227,7 +1227,7 @@ pp_def("ggev",
 		if ($jobvr())
 			pjobvr = \'V\';
 
-		$TFD(sggev_,dggev_)(
+		$TFD(FORTRAN(sggev),FORTRAN(dggev))(
 		&pjobvl,
 		&pjobvr,
 		&(integer){$PRIV(__n_size)},
@@ -1255,7 +1255,7 @@ pp_def("ggev",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sggev_,dggev_)(
+		$TFD(FORTRAN(sggev),FORTRAN(dggev))(
 		&pjobvl,
 		&pjobvr,
 		&(integer){$PRIV(__n_size)},
@@ -1388,7 +1388,7 @@ pp_def("ggevx",
 		char pbalanc, psens;
 
              types(F) %{
-		int sggevx_(char *balanc, char *jobvl, char *jobvr, char *
+		int FORTRAN(sggevx)(char *balanc, char *jobvl, char *jobvr, char *
 		sense, integer *n, float *a, integer *lda, float *b,
 		integer *ldb, float *alphar, float *alphai, float *
 		beta, float *vl, integer *ldvl, float *vr, integer *ldvr,
@@ -1441,7 +1441,7 @@ pp_def("ggevx",
 				iwork = (integer *)malloc(($SIZE(n) + 6) *  sizeof(integer));
 		}
 
-		$TFD(sggevx_,dggevx_)(
+		$TFD(FORTRAN(sggevx),FORTRAN(dggevx))(
 		&pbalanc,
 		&pjobvl,
 		&pjobvr,
@@ -1481,7 +1481,7 @@ pp_def("ggevx",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sggevx_,dggevx_)(
+		$TFD(FORTRAN(sggevx),FORTRAN(dggevx))(
 		&pbalanc,
 		&pjobvl,
 		&pjobvr,
@@ -1832,7 +1832,7 @@ pp_def("gees",
 		}
 
              types(F) %{
-		sgees_(
+		FORTRAN(sgees)(
 		&jvs,
 		&psort,
 		fselection_wrapper,
@@ -1850,7 +1850,7 @@ pp_def("gees",
 		$P(info));
 		%}
 	     types(D) %{
-		dgees_(
+		FORTRAN(dgees)(
 		&jvs,
 		&psort,
 		dselection_wrapper,
@@ -1880,7 +1880,7 @@ pp_def("gees",
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
      	types(F) %{
-		sgees_(
+		FORTRAN(sgees)(
 		&jvs,
 		&psort,
 		fselection_wrapper,
@@ -1899,7 +1899,7 @@ pp_def("gees",
 		%}
 
     	types(D) %{
-		dgees_(
+		FORTRAN(dgees)(
 		&jvs,
 		&psort,
 		dselection_wrapper,
@@ -2095,7 +2095,7 @@ pp_def("geesx",
 		}
 		types(D) %{
 		work  = (double * )malloc(lwork * sizeof (double));
-		dgeesx_(
+		FORTRAN(dgeesx)(
 		&jvs,
 		&psort,
 		dselection_wrapper,
@@ -2120,7 +2120,7 @@ pp_def("geesx",
 
 		types(F) %{
 		work  = (float * )malloc(lwork * sizeof (float));
-		sgeesx_(
+		FORTRAN(sgeesx)(
 		&jvs,
 		&psort,
 		fselection_wrapper,
@@ -2374,7 +2374,7 @@ pp_def("gges",
 			bwork = (integer *)malloc($PRIV(__n_size) *  sizeof(integer));
 		}
              types(F) %{
-		sgges_(
+		FORTRAN(sgges)(
 		&pjobvsl,
 		&pjobvsr,
 		&psort,
@@ -2398,7 +2398,7 @@ pp_def("gges",
 		$P(info));
 		%}
              types(D) %{
-		dgges_(
+		FORTRAN(dgges)(
 		&pjobvsl,
 		&pjobvsr,
 		&psort,
@@ -2431,7 +2431,7 @@ pp_def("gges",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 		types(F) %{
-		sgges_(
+		FORTRAN(sgges)(
 		&pjobvsl,
 		&pjobvsr,
 		&psort,
@@ -2456,7 +2456,7 @@ pp_def("gges",
 		%}
 
 		types(D) %{
-		dgges_(
+		FORTRAN(dgges)(
 		&pjobvsl,
 		&pjobvsr,
 		&psort,
@@ -2700,13 +2700,13 @@ pp_def("ggesx",
 		// for this feature.
 
 		minwrk = ($SIZE(n) + 1 << 3) + 16;
-		maxwrk = ($SIZE(n) + 1) * 7 + $SIZE(n) * (integer ) ilaenv_(&c__1, "DGEQRF", " ", &(integer){$PRIV(__n_size)}, &c__1,
+		maxwrk = ($SIZE(n) + 1) * 7 + $SIZE(n) * (integer ) FORTRAN(ilaenv)(&c__1, "DGEQRF", " ", &(integer){$PRIV(__n_size)}, &c__1,
 		&(integer){$PRIV(__n_size)}, &c__0, (ftnlen)6, (ftnlen)1) + 16;
 
 		if ($jobvsl())
 		{
 			integer i__1 = maxwrk;
-			integer i__2 = minwrk + $SIZE(n) * (integer )ilaenv_(&c__1, "DORGQR"
+			integer i__2 = minwrk + $SIZE(n) * (integer )FORTRAN(ilaenv)(&c__1, "DORGQR"
 		    		, " ", &(integer){$PRIV(__n_size)}, &c__1, &(integer){$PRIV(__n_size)}, &c_n1, (ftnlen)6, (ftnlen)1);
 	    		maxwrk = (integer ) max(i__1,i__2);
 			pjobvsl = \'V\';
@@ -2716,7 +2716,7 @@ pp_def("ggesx",
 		{
 		types(F) %{
 			float *work = (float *)malloc(lwork *  sizeof(float));
-		sggesx_(
+		FORTRAN(sggesx)(
 		&pjobvsl,
 		&pjobvsr,
 		&psort,
@@ -2747,7 +2747,7 @@ pp_def("ggesx",
              	%}
              	types(D) %{
 			double *work = (double *)malloc(lwork *  sizeof(double));
-		dggesx_(
+		FORTRAN(dggesx)(
 		&pjobvsl,
 		&pjobvsr,
 		&psort,
@@ -2999,7 +2999,7 @@ pp_def("syev",
 			puplo = \'L\';
 
 
-		$TFD(ssyev_,dsyev_)(
+		$TFD(FORTRAN(ssyev),FORTRAN(dsyev))(
 		&jz,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -3020,7 +3020,7 @@ pp_def("syev",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssyev_,dsyev_)(
+		$TFD(FORTRAN(ssyev),FORTRAN(dsyev))(
 		&jz,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -3116,7 +3116,7 @@ pp_def("syevd",
 			puplo = \'L\';
 
 
-		$TFD(ssyevd_,dsyevd_)(
+		$TFD(FORTRAN(ssyevd),FORTRAN(dsyevd))(
 		&jz,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -3141,7 +3141,7 @@ pp_def("syevd",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssyevd_,dsyevd_)(
+		$TFD(FORTRAN(ssyevd),FORTRAN(dsyevd))(
 		&jz,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -3264,7 +3264,7 @@ pp_def("syevx",
 
 		iwork = (integer *)malloc(5 * $SIZE (n) * sizeof(integer));
 
-		$TFD(ssyevx_,dsyevx_)(
+		$TFD(FORTRAN(ssyevx),FORTRAN(dsyevx))(
 		&jz,
 		&prange,
 		&puplo,
@@ -3296,7 +3296,7 @@ pp_def("syevx",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssyevx_,dsyevx_)(
+		$TFD(FORTRAN(ssyevx),FORTRAN(dsyevx))(
 		&jz,
 		&prange,
 		&puplo,
@@ -3487,7 +3487,7 @@ pp_def("syevr",
 
 
 
-		$TFD(ssyevr_,dsyevr_)(
+		$TFD(FORTRAN(ssyevr),FORTRAN(dsyevr))(
 		&jz,
 		&prange,
 		&puplo,
@@ -3523,7 +3523,7 @@ pp_def("syevr",
              %}
 		iwork = (integer *)malloc(liwork * sizeof(integer));
 
-		$TFD(ssyevr_,dsyevr_)(
+		$TFD(FORTRAN(ssyevr),FORTRAN(dsyevr))(
 		&jz,
 		&prange,
 		&puplo,
@@ -3733,7 +3733,7 @@ pp_def("sygv",
 			puplo = \'L\';
 
 
-		$TFD(ssygv_,dsygv_)(
+		$TFD(FORTRAN(ssygv),FORTRAN(dsygv))(
 		$P(itype),
 		&jz,
 		&puplo,
@@ -3757,7 +3757,7 @@ pp_def("sygv",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssygv_,dsygv_)(
+		$TFD(FORTRAN(ssygv),FORTRAN(dsygv))(
 		$P(itype),
 		&jz,
 		&puplo,
@@ -3881,7 +3881,7 @@ pp_def("sygvd",
 			puplo = \'L\';
 
 
-		$TFD(ssygvd_,dsygvd_)(
+		$TFD(FORTRAN(ssygvd),FORTRAN(dsygvd))(
 		$P(itype),
 		&jz,
 		&puplo,
@@ -3910,7 +3910,7 @@ pp_def("sygvd",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssygvd_,dsygvd_)(
+		$TFD(FORTRAN(ssygvd),FORTRAN(dsygvd))(
 		$P(itype),
 		&jz,
 		&puplo,
@@ -4056,7 +4056,7 @@ pp_def("sygvx",
 
 		iwork = (integer *)malloc((5 * $SIZE(n)) *  sizeof(integer));
 
-		$TFD(ssygvx_,dsygvx_)(
+		$TFD(FORTRAN(ssygvx),FORTRAN(dsygvx))(
 		$P(itype),
 		&jz,
 		&prange,
@@ -4091,7 +4091,7 @@ pp_def("sygvx",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssygvx_,dsygvx_)(
+		$TFD(FORTRAN(ssygvx),FORTRAN(dsygvx))(
 		$P(itype),
 		&jz,
 		&prange,
@@ -4270,7 +4270,7 @@ pp_def("gesv",
 		*lda, integer *ipiv, double *b, integer *ldb, integer *info);
              %}
 
-		$TFD(sgesv_,dgesv_)(
+		$TFD(FORTRAN(sgesv),FORTRAN(dgesv))(
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
 		$P(A),
@@ -4395,7 +4395,7 @@ pp_def("gesvx",
              %}
 		iwork  = (integer *) malloc ($PRIV(__n_size)* sizeof (integer));
 
-		$TFD(sgesvx_,dgesvx_)(
+		$TFD(FORTRAN(sgesvx),FORTRAN(dgesvx))(
 		&pfact,
 		&ptrans,
 		&(integer){$PRIV(__n_size)},
@@ -4696,7 +4696,7 @@ pp_def("sysv",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(ssysv_,dsysv_)(
+		$TFD(FORTRAN(ssysv),FORTRAN(dsysv))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -4720,7 +4720,7 @@ pp_def("sysv",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(ssysv_,dsysv_)(
+		$TFD(FORTRAN(ssysv),FORTRAN(dsysv))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -4852,7 +4852,7 @@ pp_def("sysvx",
 		iwork  = (integer *) malloc ($PRIV(__n_size)* sizeof (integer));
 
 
-		$TFD(ssysvx_,dsysvx_)(
+		$TFD(FORTRAN(ssysvx),FORTRAN(dsysvx))(
 		&pfact,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -4883,7 +4883,7 @@ pp_def("sysvx",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(ssysvx_,dsysvx_)(
+		$TFD(FORTRAN(ssysvx),FORTRAN(dsysvx))(
 		&pfact,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -5089,7 +5089,7 @@ pp_def("posv",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(sposv_,dposv_)(
+		$TFD(FORTRAN(sposv),FORTRAN(dposv))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -5214,7 +5214,7 @@ pp_def("posvx",
              %}
 		iwork  = (integer *) malloc ($PRIV(__n_size)* sizeof (integer));
 
-		$TFD(sposvx_,dposvx_)(
+		$TFD(FORTRAN(sposvx),FORTRAN(dposvx))(
 		&pfact,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -5474,7 +5474,7 @@ pp_def("gels",
 
 
 
-		$TFD(sgels_,dgels_)(
+		$TFD(FORTRAN(sgels),FORTRAN(dgels))(
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
@@ -5496,7 +5496,7 @@ pp_def("gels",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sgels_,dgels_)(
+		$TFD(FORTRAN(sgels),FORTRAN(dgels))(
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
@@ -5627,7 +5627,7 @@ pp_def("gelsy",
 		double tmp_work;
              %}
 
-		$TFD(sgelsy_,dgelsy_)(
+		$TFD(FORTRAN(sgelsy),FORTRAN(dgelsy))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__q_size)},
@@ -5651,7 +5651,7 @@ pp_def("gelsy",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sgelsy_,dgelsy_)(
+		$TFD(FORTRAN(sgelsy),FORTRAN(dgelsy))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__q_size)},
@@ -5782,7 +5782,7 @@ pp_def("gelss",
 		double tmp_work;
              %}
 
-		$TFD(sgelss_,dgelss_)(
+		$TFD(FORTRAN(sgelss),FORTRAN(dgelss))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__q_size)},
@@ -5806,7 +5806,7 @@ pp_def("gelss",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sgelss_,dgelss_)(
+		$TFD(FORTRAN(sgelss),FORTRAN(dgelss))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__q_size)},
@@ -5926,18 +5926,18 @@ pp_def("gelsd",
 		minmn = max(1,minmn);
 
              types(F) %{
-		smlsiz = ilaenv_(&c_nine, "SGELSD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
+		smlsiz = FORTRAN(ilaenv)(&c_nine, "SGELSD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
 		size_i = (integer) (log((float) minmn / (float) (smlsiz + 1)) /log(2.)) + 1;
              %}
              types(D) %{
-		smlsiz = ilaenv_(&c_nine, "DGELSD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
+		smlsiz = FORTRAN(ilaenv)(&c_nine, "DGELSD", " ", &c_zero, &c_zero, &c_zero, &c_zero, (ftnlen)6, (ftnlen)1);
 		size_i = (integer) (log((double) minmn / (double) (smlsiz + 1)) /log(2.)) + 1;
              %}
 		nlvl = max(size_i, 0);
 		iwork = (integer *)malloc((3 * minmn * nlvl + 11 * minmn) *  sizeof(integer));
 
 
-		$TFD(sgelsd_,dgelsd_)(
+		$TFD(FORTRAN(sgelsd),FORTRAN(dgelsd))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__q_size)},
@@ -5962,7 +5962,7 @@ pp_def("gelsd",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sgelsd_,dgelsd_)(
+		$TFD(FORTRAN(sgelsd),FORTRAN(dgelsd))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__q_size)},
@@ -6104,7 +6104,7 @@ pp_def("gglse",
              %}
 
 
-		$TFD(sgglse_,dgglse_)(
+		$TFD(FORTRAN(sgglse),FORTRAN(dgglse))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__p_size)},
@@ -6128,7 +6128,7 @@ pp_def("gglse",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sgglse_,dgglse_)(
+		$TFD(FORTRAN(sgglse),FORTRAN(dgglse))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__p_size)},
@@ -6232,7 +6232,7 @@ pp_def("ggglm",
              %}
 
 
-		$TFD(sggglm_,dggglm_)(
+		$TFD(FORTRAN(sggglm),FORTRAN(dggglm))(
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__p_size)},
@@ -6256,7 +6256,7 @@ pp_def("ggglm",
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
 
-		$TFD(sggglm_,dggglm_)(
+		$TFD(FORTRAN(sggglm),FORTRAN(dggglm))(
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__p_size)},
@@ -6356,7 +6356,7 @@ pp_def("getrf",
 		extern int FORTRAN(dgetrf)(integer *m, integer *n, double *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
-		$TFD(sgetrf_,dgetrf_)(
+		$TFD(FORTRAN(sgetrf),FORTRAN(dgetrf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6423,7 +6423,7 @@ pp_def("getf2",
 		extern int FORTRAN(dgetf2)(integer *m, integer *n, double *a, integer *
 		lda, integer *ipiv, integer *info);
              %}
-		$TFD(sgetf2_,dgetf2_)(
+		$TFD(FORTRAN(sgetf2),FORTRAN(dgetf2))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6498,7 +6498,7 @@ pp_def("sytrf",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(ssytrf_,dsytrf_)(
+		$TFD(FORTRAN(ssytrf),FORTRAN(dsytrf))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6516,7 +6516,7 @@ pp_def("sytrf",
              	types(D) %{
 			double *work = (double *)malloc(lwork *  sizeof(double));
              	%}
-		$TFD(ssytrf_,dsytrf_)(
+		$TFD(FORTRAN(ssytrf),FORTRAN(dsytrf))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6642,7 +6642,7 @@ pp_def("sytf2",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(ssytf2_,dsytf2_)(
+		$TFD(FORTRAN(ssytf2),FORTRAN(dsytf2))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6731,7 +6731,7 @@ pp_def("potrf",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(spotrf_,dpotrf_)(
+		$TFD(FORTRAN(spotrf),FORTRAN(dpotrf))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6804,7 +6804,7 @@ pp_def("potf2",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(spotf2_,dpotf2_)(
+		$TFD(FORTRAN(spotf2),FORTRAN(dpotf2))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -6879,7 +6879,7 @@ pp_def("getri",
              %}
 
 
-		$TFD(sgetri_,dgetri_)(
+		$TFD(FORTRAN(sgetri),FORTRAN(dgetri))(
 		&(integer){$PRIV(__n_size)},
 		$P(A),
 		&(integer){$PRIV(__n_size)},
@@ -6896,7 +6896,7 @@ pp_def("getri",
 		types(D) %{
 			double *work = (double *)malloc(lwork *  sizeof(double));
 		%}
-		$TFD(sgetri_,dgetri_)(
+		$TFD(FORTRAN(sgetri),FORTRAN(dgetri))(
 		&(integer){$PRIV(__n_size)},
 		$P(A),
 		&(integer){$PRIV(__n_size)},
@@ -6971,7 +6971,7 @@ pp_def("sytri",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(ssytri_, dsytri_)(
+		$TFD(FORTRAN(ssytri),FORTRAN(dsytri))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -7047,7 +7047,7 @@ pp_def("potri",
 		if ($uplo())
 			puplo = \'L\';
 
-		$TFD(spotri_,dpotri_)(
+		$TFD(FORTRAN(spotri),FORTRAN(dpotri))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -7115,7 +7115,7 @@ pp_def("trtri",
 		if ($diag())
 			pdiag = \'U\';
 
-		$TFD(strtri_, dtrtri_)(
+		$TFD(FORTRAN(strtri),FORTRAN(dtrtri))(
 		&puplo,
 		&pdiag,
 		&(integer){$PRIV(__n_size)},
@@ -7191,7 +7191,7 @@ pp_def("trti2",
 		if ($diag())
 			pdiag = \'U\';
 
-		$TFD(strti2_, dtrti2_)(
+		$TFD(FORTRAN(strti2),FORTRAN(dtrti2))(
 		&puplo,
 		&pdiag,
 		&(integer){$PRIV(__n_size)},
@@ -7261,7 +7261,7 @@ pp_def("getrs",
 		if($trans())
 			transp = \'T\';
 
-		$TFD(sgetrs_,dgetrs_)(
+		$TFD(FORTRAN(sgetrs),FORTRAN(dgetrs))(
 		&transp,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -7334,7 +7334,7 @@ pp_def("sytrs",
 		if($uplo())
 			puplo = \'L\';
 
-		$TFD(ssytrs_,dsytrs_)(
+		$TFD(FORTRAN(ssytrs),FORTRAN(dsytrs))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -7409,7 +7409,7 @@ pp_def("potrs",
 		if($uplo())
 			puplo = \'L\';
 
-		$TFD(spotrs_,dpotrs_)(
+		$TFD(FORTRAN(spotrs),FORTRAN(dpotrs))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -7484,7 +7484,7 @@ pp_def("trtrs",
 		if($diag())
 			pdiag = \'U\';
 
-		$TFD(strtrs_,dtrtrs_)(
+		$TFD(FORTRAN(strtrs),FORTRAN(dtrtrs))(
 		&puplo,
 		&ptrans,
 		&pdiag,
@@ -7584,7 +7584,7 @@ pp_def("latrs",
 		if($normin())
 			pnormin = \'Y\';
 
-		$TFD(slatrs_,dlatrs_)(
+		$TFD(FORTRAN(slatrs),FORTRAN(dlatrs))(
 		&puplo,
 		&ptrans,
 		&pdiag,
@@ -7779,7 +7779,7 @@ pp_def("gecon",
 		if($norm())
 			pnorm = \'O\';
 
-		$TFD(sgecon_,dgecon_)(
+		$TFD(FORTRAN(sgecon),FORTRAN(dgecon))(
 		&pnorm,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -7862,7 +7862,7 @@ pp_def("sycon",
 		if($uplo())
 			puplo = \'L\';
 
-		$TFD(ssycon_,dsycon_)(
+		$TFD(FORTRAN(ssycon),FORTRAN(dsycon))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -7948,7 +7948,7 @@ pp_def("pocon",
 		if($uplo())
 			puplo = \'L\';
 
-		$TFD(spocon_,dpocon_)(
+		$TFD(FORTRAN(spocon),FORTRAN(dpocon))(
 		&puplo,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8030,7 +8030,7 @@ pp_def("trcon",
 		if($norm())
 			pnorm = \'O\';
 
-		$TFD(strcon_,dtrcon_)(
+		$TFD(FORTRAN(strcon),FORTRAN(dtrcon))(
 		&pnorm,
 		&puplo,
 		&pdiag,
@@ -8118,7 +8118,7 @@ pp_def("geqp3",
 		 double tmp_work;
              %}
 
-		$TFD(sgeqp3_,dgeqp3_)(
+		$TFD(FORTRAN(sgeqp3),FORTRAN(dgeqp3))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8139,7 +8139,7 @@ pp_def("geqp3",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgeqp3_,dgeqp3_)(
+		$TFD(FORTRAN(sgeqp3),FORTRAN(dgeqp3))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8224,7 +8224,7 @@ pp_def("geqrf",
 		 double tmp_work;
              %}
 
-		$TFD(sgeqrf_,dgeqrf_)(
+		$TFD(FORTRAN(sgeqrf),FORTRAN(dgeqrf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8244,7 +8244,7 @@ pp_def("geqrf",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgeqrf_,dgeqrf_)(
+		$TFD(FORTRAN(sgeqrf),FORTRAN(dgeqrf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8321,7 +8321,7 @@ pp_def("orgqr",
 		 double tmp_work;
              %}
 
-		$TFD(sorgqr_,dorgqr_)(
+		$TFD(FORTRAN(sorgqr),FORTRAN(dorgqr))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -8342,7 +8342,7 @@ pp_def("orgqr",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sorgqr_,dorgqr_)(
+		$TFD(FORTRAN(sorgqr),FORTRAN(dorgqr))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -8419,7 +8419,7 @@ pp_def("ormqr",
 		if($side())
 			pside = \'R\';
 
-		$TFD(sormqr_,dormqr_)(
+		$TFD(FORTRAN(sormqr),FORTRAN(dormqr))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -8444,7 +8444,7 @@ pp_def("ormqr",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sormqr_,dormqr_)(
+		$TFD(FORTRAN(sormqr),FORTRAN(dormqr))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -8538,7 +8538,7 @@ pp_def("gelqf",
 		 double tmp_work;
              %}
 
-		$TFD(sgelqf_,dgelqf_)(
+		$TFD(FORTRAN(sgelqf),FORTRAN(dgelqf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8558,7 +8558,7 @@ pp_def("gelqf",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgelqf_,dgelqf_)(
+		$TFD(FORTRAN(sgelqf),FORTRAN(dgelqf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8634,7 +8634,7 @@ pp_def("orglq",
 		 double tmp_work;
              %}
 
-		$TFD(sorglq_,dorglq_)(
+		$TFD(FORTRAN(sorglq),FORTRAN(dorglq))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -8655,7 +8655,7 @@ pp_def("orglq",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sorglq_,dorglq_)(
+		$TFD(FORTRAN(sorglq),FORTRAN(dorglq))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -8730,7 +8730,7 @@ pp_def("ormlq",
 		if($side())
 			pside = \'R\';
 
-		$TFD(sormlq_,dormlq_)(
+		$TFD(FORTRAN(sormlq),FORTRAN(dormlq))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -8755,7 +8755,7 @@ pp_def("ormlq",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sormlq_,dormlq_)(
+		$TFD(FORTRAN(sormlq),FORTRAN(dormlq))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -8849,7 +8849,7 @@ pp_def("geqlf",
 		 double tmp_work;
              %}
 
-		$TFD(sgeqlf_,dgeqlf_)(
+		$TFD(FORTRAN(sgeqlf),FORTRAN(dgeqlf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8869,7 +8869,7 @@ pp_def("geqlf",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgeqlf_,dgeqlf_)(
+		$TFD(FORTRAN(sgeqlf),FORTRAN(dgeqlf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -8947,7 +8947,7 @@ pp_def("orgql",
 		 double tmp_work;
              %}
 
-		$TFD(sorgql_,dorgql_)(
+		$TFD(FORTRAN(sorgql),FORTRAN(dorgql))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -8968,7 +8968,7 @@ pp_def("orgql",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sorgql_,dorgql_)(
+		$TFD(FORTRAN(sorgql),FORTRAN(dorgql))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -9044,7 +9044,7 @@ pp_def("ormql",
 		if($side())
 			pside = \'R\';
 
-		$TFD(sormql_,dormql_)(
+		$TFD(FORTRAN(sormql),FORTRAN(dormql))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -9069,7 +9069,7 @@ pp_def("ormql",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sormql_,dormql_)(
+		$TFD(FORTRAN(sormql),FORTRAN(dormql))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -9163,7 +9163,7 @@ pp_def("gerqf",
 		 double tmp_work;
              %}
 
-		$TFD(sgerqf_,dgerqf_)(
+		$TFD(FORTRAN(sgerqf),FORTRAN(dgerqf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -9183,7 +9183,7 @@ pp_def("gerqf",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgerqf_,dgerqf_)(
+		$TFD(FORTRAN(sgerqf),FORTRAN(dgerqf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -9262,7 +9262,7 @@ pp_def("orgrq",
 		 double tmp_work;
              %}
 
-		$TFD(sorgrq_,dorgrq_)(
+		$TFD(FORTRAN(sorgrq),FORTRAN(dorgrq))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -9283,7 +9283,7 @@ pp_def("orgrq",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sorgrq_,dorgrq_)(
+		$TFD(FORTRAN(sorgrq),FORTRAN(dorgrq))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__k_size)},
@@ -9359,7 +9359,7 @@ pp_def("ormrq",
 		if($side())
 			pside = \'R\';
 
-		$TFD(sormrq_,dormrq_)(
+		$TFD(FORTRAN(sormrq),FORTRAN(dormrq))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -9384,7 +9384,7 @@ pp_def("ormrq",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sormrq_,dormrq_)(
+		$TFD(FORTRAN(sormrq),FORTRAN(dormrq))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -9478,7 +9478,7 @@ pp_def("tzrzf",
 		 double tmp_work;
              %}
 
-		$TFD(stzrzf_,dtzrzf_)(
+		$TFD(FORTRAN(stzrzf),FORTRAN(dtzrzf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -9498,7 +9498,7 @@ pp_def("tzrzf",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(stzrzf_,dtzrzf_)(
+		$TFD(FORTRAN(stzrzf),FORTRAN(dtzrzf))(
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -9602,7 +9602,7 @@ pp_def("ormrz",
 		if($side())
 			pside = \'R\';
 
-		$TFD(sormrz_,dormrz_)(
+		$TFD(FORTRAN(sormrz),FORTRAN(dormrz))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -9628,7 +9628,7 @@ pp_def("ormrz",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sormrz_,dormrz_)(
+		$TFD(FORTRAN(sormrz),FORTRAN(dormrz))(
 		&pside,
 		&ptrans,
 		&(integer){$PRIV(__m_size)},
@@ -9727,7 +9727,7 @@ pp_def("gehrd",
 		 double tmp_work;
              %}
 
-		$TFD(sgehrd_,dgehrd_)(
+		$TFD(FORTRAN(sgehrd),FORTRAN(dgehrd))(
 		&(integer){$PRIV(__n_size)},
 		$P(ilo),
 		$P(ihi),
@@ -9748,7 +9748,7 @@ pp_def("gehrd",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sgehrd_,dgehrd_)(
+		$TFD(FORTRAN(sgehrd),FORTRAN(dgehrd))(
 		&(integer){$PRIV(__n_size)},
 		$P(ilo),
 		$P(ihi),
@@ -9857,7 +9857,7 @@ pp_def("orghr",
 		 double tmp_work;
              %}
 
-		$TFD(sorghr_,dorghr_)(
+		$TFD(FORTRAN(sorghr),FORTRAN(dorghr))(
 		&(integer){$PRIV(__n_size)},
 		$P(ilo),
 		$P(ihi),
@@ -9878,7 +9878,7 @@ pp_def("orghr",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(sorghr_,dorghr_)(
+		$TFD(FORTRAN(sorghr),FORTRAN(dorghr))(
 		&(integer){$PRIV(__n_size)},
 		$P(ilo),
 		$P(ihi),
@@ -9970,7 +9970,7 @@ pp_def("hseqr",
 			default: pcompz = \'N\';
 		}
 
-		$TFD(shseqr_,dhseqr_)(
+		$TFD(FORTRAN(shseqr),FORTRAN(dhseqr))(
 		&pjob,
 		&pcompz,
 		&(integer){$PRIV(__n_size)},
@@ -9996,7 +9996,7 @@ pp_def("hseqr",
 
 		double *work = (double *)malloc(lwork *  sizeof(double));
              %}
-		$TFD(shseqr_,dhseqr_)(
+		$TFD(FORTRAN(shseqr),FORTRAN(dhseqr))(
 		&pjob,
 		&pcompz,
 		&(integer){$PRIV(__n_size)},
@@ -10142,7 +10142,7 @@ pp_def("trevc",
 				mm = $SIZE(s);
 		}
 
-		$TFD(strevc_,dtrevc_)(
+		$TFD(FORTRAN(strevc),FORTRAN(dtrevc))(
 		&pside,
 		&phowmny,
 		$P(select),
@@ -10342,7 +10342,7 @@ pp_def("tgevc",
 				mm = $SIZE(s);
 		}
 
-		$TFD(stgevc_,dtgevc_)(
+		$TFD(FORTRAN(stgevc),FORTRAN(dtgevc))(
 		&pside,
 		&phowmny,
 		$P(select),
@@ -10507,7 +10507,7 @@ pp_def("gebal",
 			default:  pjob = \'N\';
 		}
 		
-		$TFD(sgebal_,dgebal_)(
+		$TFD(FORTRAN(sgebal),FORTRAN(dgebal))(
 		&pjob,
 		&(integer){$PRIV(__n_size)},
 		$P(A),
@@ -10640,7 +10640,7 @@ pp_def("gebak",
 	        if ($side())
 	        	pside = \'R\';
 
-		$TFD(sgebak_,dgebak_)(
+		$TFD(FORTRAN(sgebak),FORTRAN(dgebak))(
 		&pjob,
 		&pside,
 		&(integer){$PRIV(__n_size)},
@@ -10741,7 +10741,7 @@ pp_def("lange",
 			default: pnorm = \'M\';
 		}
 
-		$b() = $TFD(slange_,dlange_)(
+		$b() = $TFD(FORTRAN(slange),FORTRAN(dlange))(
 		&pnorm,
 		&(integer){$PRIV(__n_size)},
 		&(integer){$PRIV(__m_size)},
@@ -10837,7 +10837,7 @@ pp_def("lansy",
 		if($uplo())
 			puplo = \'L\';
 
-		$b() = $TFD(slansy_,dlansy_)(
+		$b() = $TFD(FORTRAN(slansy),FORTRAN(dlansy))(
 		&pnorm,
 		&puplo,
 		&(integer){$PRIV(__n_size)},
@@ -10939,7 +10939,7 @@ pp_def("lantr",
 		if($diag())
 			pdiag = \'U\';
 
-		$b() = $TFD(slantr_,dlantr_)(
+		$b() = $TFD(FORTRAN(slantr),FORTRAN(dlantr))(
 		&pnorm,
 		&puplo,
 		&pdiag,
@@ -11043,7 +11043,7 @@ pp_def("gemm",
 			ptransb = \'T\';
 
 
-		$TFD(sgemm_,dgemm_)(
+		$TFD(FORTRAN(sgemm),FORTRAN(dgemm))(
 		&ptransa,
 		&ptransb,
 		&(integer){$PRIV(__r_size)},
@@ -11201,7 +11201,7 @@ pp_def("mmult",
 			double beta = 0;
 		%}
 
-		$TFD(sgemm_,dgemm_)(
+		$TFD(FORTRAN(sgemm),FORTRAN(dgemm))(
 		&ptrans,
 		&ptrans,
 		&(integer){$PRIV(__p_size)},
@@ -11247,7 +11247,7 @@ pp_def("smmult",
 			double beta = 0;
 		%}
 
-		$TFD(sgemmb_,dgemmb_)(
+		$TFD(FORTRAN(sgemmb),FORTRAN(dgemmb))(
 		&ptrans,
 		&ptrans,
 		&(integer){$PRIV(__p_size)},
@@ -11296,7 +11296,7 @@ pp_def("crossprod",
 			double beta = 0;
 		%}
 
-		$TFD(sgemm_,dgemm_)(
+		$TFD(FORTRAN(sgemm),FORTRAN(dgemm))(
 		&btrans,
 		&atrans,
 		&(integer){$PRIV(__p_size)},
@@ -11346,7 +11346,7 @@ pp_def("syrk",
 			ptrans = \'T\';
 
 
-		$TFD(ssyrk_,dsyrk_)(
+		$TFD(FORTRAN(ssyrk),FORTRAN(dsyrk))(
 		&puplo,
 		&ptrans,
 		&(integer){$PRIV(__p_size)},
@@ -11500,7 +11500,7 @@ pp_def("dot",
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 		
-		$c() = $TFD(sdot_,ddot_)(
+		$c() = $TFD(FORTRAN(sdot),FORTRAN(ddot))(
 		&n,
 		$P(a),
 		$P(inca),
@@ -11538,7 +11538,7 @@ pp_def("axpy",
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 
-		$TFD(saxpy_,daxpy_)(
+		$TFD(FORTRAN(saxpy),FORTRAN(daxpy))(
 		&n,
 		$P(alpha),
 		$P(a),
@@ -11578,7 +11578,7 @@ pp_def("nrm2",
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 
-		$b() = $TFD(snrm2_,dnrm2_)(
+		$b() = $TFD(FORTRAN(snrm2),FORTRAN(dnrm2))(
 		&n,
 		$P(a),
 		$P(inca));
@@ -11612,7 +11612,7 @@ pp_def("asum",
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 
-		$b() = $TFD(sasum_,dasum_)(
+		$b() = $TFD(FORTRAN(sasum),FORTRAN(dasum))(
 		&n,
 		$P(a),
 		$P(inca));
@@ -11646,7 +11646,7 @@ pp_def("scal",
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 
-		$TFD(sscal_,dscal_)(
+		$TFD(FORTRAN(sscal),FORTRAN(dscal))(
 		&n,
 		$P(scale),
 		$P(a),
@@ -11681,7 +11681,7 @@ pp_def("rot",
 		%}
 		integer n = (integer ) $PRIV(__n_size)/$inca();
 
-		$TFD(srot_,drot_)(
+		$TFD(FORTRAN(srot),FORTRAN(drot))(
 		&n,
 		$P(a),
 		$P(inca),
@@ -11720,7 +11720,7 @@ pp_def("rotg",
 			double *dy, double *c, double *s);
 		%}
 
-		$TFD(srotg_,drotg_)(
+		$TFD(FORTRAN(srotg),FORTRAN(drotg))(
 		$P(a),
 		$P(b),
 		$P(c),
@@ -11762,7 +11762,7 @@ pp_def("lasrt",
 		if ($id())
 			pwork = \'D\';
 
-		$TFD(slasrt_,dlasrt_)(
+		$TFD(FORTRAN(slasrt),FORTRAN(dlasrt))(
 		&pwork,
 		&(integer){$PRIV(__n_size)},
 		$P(d),
@@ -11826,7 +11826,7 @@ pp_def("lacpy",
 			default: puplo = \'A\';
 		}
 
-		$TFD(slacpy_,dlacpy_)(
+		$TFD(FORTRAN(slacpy),FORTRAN(dlacpy))(
 		&puplo,
 		&(integer){$PRIV(__m_size)},
 		&(integer){$PRIV(__n_size)},
@@ -11881,7 +11881,7 @@ pp_def("laswp",
 		%}
 
 
-		$TFD(slaswp_,dlaswp_)(
+		$TFD(FORTRAN(slaswp),FORTRAN(dlaswp))(
 		&(integer){$PRIV(__n_size)},
 		$P(A),
 		&(integer){$PRIV(__m_size)},
@@ -11964,7 +11964,7 @@ pp_def("lamch",
 				break;
 			default: pcmach = \'E\';
 		}
-		$precision() = $TFD(slamch_,dlamch_)(&pcmach);
+		$precision() = $TFD(FORTRAN(slamch),FORTRAN(dlamch))(&pcmach);
 ',
       Doc => '
 
@@ -12020,7 +12020,7 @@ pp_def("labad",
 			extern int FORTRAN(dlabad)(double *small, double *large);
 		%}
 
-		$TFD(slabad_, dlabad_)($P(small),$P(large));
+		$TFD(FORTRAN(slabad),FORTRAN(dlabad))($P(small),$P(large));
 ',
       Doc => '
 
@@ -12335,7 +12335,7 @@ pp_def(
 	for (;;)
 	{
 		i++;
-		$TFD(sgemm_,dgemm_)(&ptrans,&ptrans,&(integer){$PRIV(__n_size)},&(integer){$PRIV(__n_size)},
+		$TFD(FORTRAN(sgemm),FORTRAN(dgemm))(&ptrans,&ptrans,&(integer){$PRIV(__n_size)},&(integer){$PRIV(__n_size)},
 			&(integer){$PRIV(__n_size)},&alpha,$P(A),&(integer){$PRIV(__n_size)},	$P(Y), &(integer){$PRIV(__n_size)},
 			&beta, p, &(integer){$PRIV(__n_size)});
 		

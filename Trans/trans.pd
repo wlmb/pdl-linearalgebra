@@ -148,7 +148,7 @@ pp_def('geexp',
        	  GenericTypes => [D],
           Code => '
 /* ----------------------------------------------------------------------| 
- int dgpadm_(integer *ideg, integer *m, double *t, 
+ int FORTRAN(dgpadm)(integer *ideg, integer *m, double *t, 
 	double *h__, integer *ldh, double *wsp, integer *lwsp, 
 	integer *ipiv, integer *iexph, integer *ns, integer *iflag) 
 
@@ -263,7 +263,7 @@ pp_def('geexp',
 	//     and set scale = t/2^ns ... 
 
 	// Compute Infinity norm
-	hnorm = dlange_("I", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, $P(A), 
+	hnorm = FORTRAN(dlange)("I", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, $P(A), 
 			&(integer){$PRIV(__n_size)}, wsp);
 	
 	hnorm = abs($scale() * hnorm);
@@ -300,7 +300,7 @@ pp_def('geexp',
 		
 		// ---  H2 = scale2*H*H ... 
 		
-		dgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale2, h__, &(integer){$PRIV(__n_size)}, h__, 
+		FORTRAN(dgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale2, h__, &(integer){$PRIV(__n_size)}, h__, 
 		    &(integer){$PRIV(__n_size)}, &c_b7, &coef[ih2], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 		
 		// ---  initialize p (numerator) and q (denominator) ...
@@ -320,7 +320,7 @@ pp_def('geexp',
 		k = $deg() - 2;
 		do{
 			iused = iodd * iq + (1 - iodd) * ip;
-			dgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b11, &wsp[iused], &(integer){$PRIV(__n_size)}, &coef[ih2], &(integer){$PRIV(__n_size)}, &c_b7, &
+			FORTRAN(dgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b11, &wsp[iused], &(integer){$PRIV(__n_size)}, &coef[ih2], &(integer){$PRIV(__n_size)}, &c_b7, &
 			    wsp[ifree], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 			for (j = 0; j < $PRIV(__n_size); j++) {
 				wsp[ifree + j  * ($PRIV(__n_size) + 1)] += coef[k];
@@ -338,18 +338,18 @@ pp_def('geexp',
 		
 		if (iodd == 1)
 		{
-			dgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[iq], &(integer){$PRIV(__n_size)}, h__, &(integer){$PRIV(__n_size)}, &
+			FORTRAN(dgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[iq], &(integer){$PRIV(__n_size)}, h__, &(integer){$PRIV(__n_size)}, &
 				c_b7, &wsp[ifree], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 			iq = ifree;
 		}
 		else
 		{
-			dgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[ip], &(integer){$PRIV(__n_size)}, h__, &(integer){$PRIV(__n_size)}, &
+			FORTRAN(dgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[ip], &(integer){$PRIV(__n_size)}, h__, &(integer){$PRIV(__n_size)}, &
 				c_b7, &wsp[ifree], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 			ip = ifree;
 		}
-		daxpy_(&mm, &c_b19, &wsp[ip], &c__1, &wsp[iq], &c__1);
-		dgesv_(&(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &wsp[iq], &(integer){$PRIV(__n_size)}, ipiv, &wsp[ip], &(integer){$PRIV(__n_size)}, $P(info));
+		FORTRAN(daxpy)(&mm, &c_b19, &wsp[ip], &c__1, &wsp[iq], &c__1);
+		FORTRAN(dgesv)(&(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &wsp[iq], &(integer){$PRIV(__n_size)}, ipiv, &wsp[ip], &(integer){$PRIV(__n_size)}, $P(info));
 	
 		if ($info() != 0)
 		{
@@ -359,13 +359,13 @@ pp_def('geexp',
 		}
 		else
 		{
-			dscal_(&mm, &c_b23, &wsp[ip], &c__1);
+			FORTRAN(dscal)(&mm, &c_b23, &wsp[ip], &c__1);
 			for (j = 0; j < $PRIV(__n_size); j++) {
 				wsp[ip + j  * ($PRIV(__n_size) + 1)] += 1.;
 			}
 			iput = ip;
 			if ($ns() == 0 && iodd == 1)
-				dscal_(&mm, &c_b19, &wsp[ip], &c__1);
+				FORTRAN(dscal)(&mm, &c_b19, &wsp[ip], &c__1);
 			else{
 				// --   squaring : exp(t*H) = (exp(t*H))^(2^ns) ... 
 				iodd = 1;
@@ -373,7 +373,7 @@ pp_def('geexp',
 				for (k = 0; k < i__1; k++) {
 					iget = iodd * ip + (1 - iodd) * iq;
 					iput = (1 - iodd) * ip + iodd * iq;
-					dgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b11, &wsp[iget], &(integer){$PRIV(__n_size)}, &wsp[iget], &(integer){$PRIV(__n_size)}, &c_b7,
+					FORTRAN(dgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b11, &wsp[iget], &(integer){$PRIV(__n_size)}, &wsp[iget], &(integer){$PRIV(__n_size)}, &c_b7,
 						&wsp[iput], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 					iodd = 1 - iodd;
 				}
@@ -458,7 +458,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
        	  GenericTypes => [D],
           Code => '
 /* ----------------------------------------------------------------------| 
- int dgpadm_(integer *ideg, integer *m, double *t, 
+ int FORTRAN(dgpadm)(integer *ideg, integer *m, double *t, 
 	dcomplex *h__, integer *ldh, dcomplex *wsp, integer *lwsp, 
 	integer *ipiv, integer *iexph, integer *ns, integer *iflag) 
 
@@ -530,7 +530,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 	extern int FORTRAN(zgesv)(integer *, integer *, dcomplex *, 
 		integer *, integer *, dcomplex *, integer *, integer *);
 	extern int FORTRAN(zaxpy)(integer *, dcomplex *, 
-		dcomplex *, integer *, dcomplex *, integer *), zdscal_(
+		dcomplex *, integer *, dcomplex *, integer *), FORTRAN(zdscal)(
 		integer *, double *, dcomplex *, integer *);
 	extern double FORTRAN(zlange)(char *norm, integer *m, integer *n, dcomplex *a, 
 		integer *lda, double *work);
@@ -581,7 +581,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 	// ---  scaling: seek ns such that ||t*H/2^ns|| < 1/2; 
 	//     and set scale = t/2^ns ... 
 	// Compute Infinity norm
-	hnorm = zlange_("I", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &h__[0], 
+	hnorm = FORTRAN(zlange)("I", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &h__[0], 
 			&(integer){$PRIV(__n_size)}, &wsp[0].r);
 
 	    hnorm = abs($scale() * hnorm);
@@ -620,7 +620,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 		    }
 		
 		// ---  H2 = scale2*H*H ...
-		    zgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale2, &h__[0], &(integer){$PRIV(__n_size)}, &h__[0], 
+		    FORTRAN(zgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale2, &h__[0], &(integer){$PRIV(__n_size)}, &h__[0], 
 			    &(integer){$PRIV(__n_size)}, &c_b1, &wsp[ih2], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 		
 		// ---  initialise p (numerator) and q (denominator) ...
@@ -653,7 +653,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 		    do
 		    {
 			    iused = iodd * iq + (1 - iodd) * ip;
-			    zgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b2, &wsp[iused], &(integer){$PRIV(__n_size)}, &wsp[ih2], &(integer){$PRIV(__n_size)}, &c_b1, &
+			    FORTRAN(zgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b2, &wsp[iused], &(integer){$PRIV(__n_size)}, &wsp[ih2], &(integer){$PRIV(__n_size)}, &c_b1, &
 				    wsp[ifree], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 			    for (j = 0; j < $PRIV(__n_size); j++) {
 				i__1 = ifree + j  * ($PRIV(__n_size) + 1);
@@ -677,23 +677,23 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 		
 		    if (iodd != 0)
 		    {
-			zgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[iq], &(integer){$PRIV(__n_size)}, &h__[0], &(integer){$PRIV(__n_size)}, &
+			FORTRAN(zgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[iq], &(integer){$PRIV(__n_size)}, &h__[0], &(integer){$PRIV(__n_size)}, &
 				c_b1, &wsp[ifree], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 			iq = ifree;
 		    }else
 		    {
-			zgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[ip], &(integer){$PRIV(__n_size)}, &h__[0], &(integer){$PRIV(__n_size)}, &
+			FORTRAN(zgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &scale, &wsp[ip], &(integer){$PRIV(__n_size)}, &h__[0], &(integer){$PRIV(__n_size)}, &
 				c_b1, &wsp[ifree], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 			ip = ifree;
 		    }
 		    z__1.r = -1.;
 		    z__1.i = -0.;
-		    zaxpy_(&mm, &z__1, &wsp[ip], &c__1, &wsp[iq], &c__1);
-		    zgesv_(&(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &wsp[iq], &(integer){$PRIV(__n_size)}, ipiv, &wsp[ip], &(integer){$PRIV(__n_size)}, $P(info));
+		    FORTRAN(zaxpy)(&mm, &z__1, &wsp[ip], &c__1, &wsp[iq], &c__1);
+		    FORTRAN(zgesv)(&(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &wsp[iq], &(integer){$PRIV(__n_size)}, ipiv, &wsp[ip], &(integer){$PRIV(__n_size)}, $P(info));
 
 		    if ($info() == 0) 
 		    {
-			    zdscal_(&mm, &c_b19, &wsp[ip], &c__1);
+			    FORTRAN(zdscal)(&mm, &c_b19, &wsp[ip], &c__1);
 			    for (j = 0; j < $PRIV(__n_size); j++)
 			    {
 				i__2 = ip + j  * ($PRIV(__n_size) + 1);
@@ -704,7 +704,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 			    }
 			    iput = ip;
 			    if ($ns() == 0 && iodd != 0) 
-				zdscal_(&mm, &c_b21, &wsp[ip], &c__1);
+				FORTRAN(zdscal)(&mm, &c_b21, &wsp[ip], &c__1);
 			    else
 			    {
 				// --   squaring : exp(t*H) = (exp(t*H))^(2^ns) ...
@@ -714,7 +714,7 @@ ACM - Transactions On Mathematical Software, 24(1):130-156, 1998
 				    {
 					iget = iodd * ip + (1 - iodd) * iq;
 					iput = (1 - iodd) * ip + iodd * iq;
-					zgemm_("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b2, &wsp[iget], &(integer){$PRIV(__n_size)}, &wsp[iget], &(integer){$PRIV(__n_size)}, &c_b1, 
+					FORTRAN(zgemm)("n", "n", &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &(integer){$PRIV(__n_size)}, &c_b2, &wsp[iget], &(integer){$PRIV(__n_size)}, &wsp[iget], &(integer){$PRIV(__n_size)}, &c_b1, 
 						&wsp[iput], &(integer){$PRIV(__n_size)}, (ftnlen)1, (ftnlen)1);
 					iodd = 1 - iodd;
 				    }
@@ -976,7 +976,7 @@ If uplo is true, A is lower triangular.
 				}
 				ind = subscr(i+1,i);
                                 // TODO : Humm
-				zdotu_(&s.r, &l, &ca[ind].r, &c__1, &diag[0].r, &c__1);
+				FORTRAN(zdotu)(&s.r, &l, &ca[ind].r, &c__1, &diag[0].r, &c__1);
 				snum.r += s.r; 
 				snum.i += s.i;
 
@@ -990,7 +990,7 @@ If uplo is true, A is lower triangular.
 				}
 				ind = subscr(i+1,i);
                                 // TODO : Humm
-				zdotu_(&s.r, &l, &cb[ind].r, &c__1, &diag[0].r, &c__1);
+				FORTRAN(zdotu)(&s.r, &l, &cb[ind].r, &c__1, &diag[0].r, &c__1);
 				snum.r -= s.r; 
 				snum.i -= s.i;
 				ind = subscr(j,i);
